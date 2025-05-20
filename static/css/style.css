@@ -1,0 +1,560 @@
+/* static/css/style.css */
+
+/* General Reset & Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    background-color: #f8f9fa; 
+    color: #343a40; 
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header and Navigation */
+header {
+    background-color: #343a40; 
+    color: #ffffff;
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav {
+    max-width: 1300px; /* Increased max-width for wider screens */
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    padding: 0 20px;
+}
+
+nav h1 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+nav h1 a, nav h1 a:visited { 
+    color: #ffffff;
+    text-decoration: none;
+}
+
+nav ul {
+    list-style-type: none;
+}
+
+nav ul li {
+    display: inline-block; 
+    margin-left: 25px; 
+}
+
+nav ul li a {
+    color: #f8f9fa; 
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5em 0;
+    transition: color 0.3s ease, border-bottom-color 0.3s ease; /* Added border transition */
+}
+
+nav ul li a:hover,
+nav ul li a.active { 
+    color: #007bff; 
+    border-bottom: 2px solid #007bff;
+}
+
+/* Main Content Area */
+main {
+    flex-grow: 1; 
+    padding: 30px 20px;
+    max-width: 1140px; /* Consistent max-width for content */
+    width: 90%; /* Responsive width */
+    margin: 30px auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.07);
+}
+
+main h2 {
+    color: #343a40;
+    margin-bottom: 25px; /* Increased bottom margin */
+    padding-bottom: 15px; /* Increased padding */
+    border-bottom: 1px solid #dee2e6; /* Slightly darker border */
+    font-size: 1.75rem; /* Slightly adjusted size */
+}
+main h3 {
+    color: #343a40;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+main h4 {
+    color: #495057;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+
+/* Form Styling */
+form div {
+    margin-bottom: 20px; 
+}
+
+form label {
+    display: block; 
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #495057;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="number"], 
+form input[type="date"], /* Added for search_trips */
+form select,
+form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff; /* Ensure background is white */
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form input[type="password"]:focus,
+form input[type="number"]:focus,
+form input[type="date"]:focus,
+form select:focus,
+form textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+form fieldset {
+    border: 1px solid #ced4da; 
+    padding: 20px; 
+    border-radius: 4px; 
+    margin-bottom:20px;
+}
+form fieldset legend {
+    padding: 0 10px; 
+    font-weight:bold; 
+    color:#495057;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+small.form-text.text-muted { /* Helper text below inputs */
+    display: block;
+    margin-top: 5px;
+    font-size: 0.85em;
+    color: #6c757d;
+}
+
+/* Button Styling */
+button[type="submit"],
+.btn { 
+    display: inline-block;
+    background-color: #007bff; 
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none; 
+    transition: background-color 0.2s ease, transform 0.1s ease; /* Slightly faster transition */
+    text-align: center; /* Ensure text is centered if used as <a> */
+}
+
+button[type="submit"]:hover,
+.btn:hover {
+    background-color: #0056b3; 
+    transform: translateY(-1px); 
+}
+
+button[type="submit"]:active,
+.btn:active {
+    transform: translateY(0px); 
+}
+
+/* Specific Button Variants */
+.btn-small {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+}
+.btn-success {
+    background-color: #28a745;
+}
+.btn-success:hover {
+    background-color: #1e7e34;
+}
+.btn-warning {
+    background-color: #ffc107;
+    color: #212529; /* Darker text for yellow bg */
+}
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+.btn-danger {
+    background-color: #dc3545;
+}
+.btn-danger:hover {
+    background-color: #bd2130;
+}
+.btn-info {
+    background-color: #17a2b8;
+}
+.btn-info:hover {
+    background-color: #117a8b;
+}
+.btn-secondary { /* A general secondary button */
+    background-color: #6c757d;
+}
+.btn-secondary:hover {
+    background-color: #545b62;
+}
+
+
+/* Flash Messages Styling */
+.flash-message {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    border: 1px solid transparent;
+}
+
+/* Updated to match flash categories (success, error, info, warning) */
+.flash-message.success { /* If category is 'success' */
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border-color: #badbcc;
+}
+.flash-message.error { /* If category is 'error' */
+    background-color: #f8d7da;
+    color: #842029;
+    border-color: #f5c2c7;
+}
+.flash-message.info { /* If category is 'info' */
+    background-color: #cff4fc;
+    color: #055160;
+    border-color: #b6effb;
+}
+.flash-message.warning { /* If category is 'warning' */
+    background-color: #fff3cd;
+    color: #856404;
+    border-color: #ffeeba;
+}
+
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #343a40;
+    color: #f8f9fa;
+    margin-top: auto; 
+    font-size: 0.9rem;
+}
+
+/* Link styling in main content */
+main a { /* Default link style within main */
+    color: #007bff;
+    text-decoration: none;
+}
+main a:hover {
+    text-decoration: underline;
+}
+
+/* Alert style for info messages (e.g., "No routes found") */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert-info {
+    color: #055160;
+    background-color: #cff4fc;
+    border-color: #b6effb;
+}
+.alert-link { /* For links within alerts */
+    font-weight: bold;
+    color: #055160; /* Match alert text color */
+}
+
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse; 
+    margin-bottom: 25px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
+    border-radius: 8px; 
+    overflow: hidden; 
+}
+
+table th, table td {
+    padding: 12px 15px; 
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0; 
+}
+
+table th {
+    background-color: #f8f9fa; 
+    color: #495057; 
+    font-weight: 600; 
+    text-transform: uppercase; 
+    font-size: 0.85em; 
+    letter-spacing: 0.05em; 
+}
+
+table thead th { border-top: none; }
+table tbody tr:last-child td { border-bottom: none; }
+table tbody tr { transition: background-color 0.2s ease-in-out; }
+table tbody tr:nth-child(even) { background-color: #fdfdfd; }
+table tbody tr:hover { background-color: #e9ecef; cursor: default; }
+
+table input[type="radio"], table input[type="checkbox"] {
+    cursor: pointer;
+    transform: scale(1.2); 
+    margin-right: 8px; /* Increased margin */
+    vertical-align: middle; /* Align with text better */
+}
+
+/* Search Form Specifics */
+.search-form {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    border: 1px solid #dee2e6;
+}
+.search-form div {
+    display: inline-block; 
+    margin-right: 15px;
+    margin-bottom: 15px; 
+    vertical-align: bottom; 
+}
+.search-form label {
+    margin-bottom: 5px; 
+    font-size: 0.9em;
+}
+.search-form input[type="text"],
+.search-form input[type="date"] { 
+    width: auto; 
+    min-width: 180px; /* Slightly wider */
+    padding: 10px; /* Adjusted padding */
+}
+.search-form button[type="submit"] {
+    padding: 10px 20px; 
+}
+
+
+/* Wrapper for table for responsiveness */
+.table-responsive-wrapper {
+    overflow-x: auto; 
+    margin-bottom: 1rem;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+
+/* Status Indicator Colors */
+.status-completed { color: #007bff; font-weight: bold; } /* Blue for completed */
+.status-refunded, 
+.status-cancelled,
+.status-partially-refunded { color: #28a745; font-weight: bold; } /* Green for processed/good states */
+.status-error,
+.status-pending, 
+.status-default { color: #dc3545; font-weight: bold; } /* Red for error/pending */
+.status-active { color: #17a2b8; font-weight: bold; } /* Info blue for active */
+
+
+/* Admin Page Specifics */
+.admin-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #dee2e6;
+}
+.admin-section-header h2 {
+    margin: 0; /* Override default h2 margin if needed */
+}
+
+/* Route List Styling */
+/* static/css/style.css */
+
+/* ... (Keep all your existing CSS from the previous full version) ... */
+
+/* --- Enhancements for Admin Manage Routes Page --- */
+
+/* Card Layout for Routes */
+.route-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Space between cards */
+    margin-top: 20px;
+}
+
+.route-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.route-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.route-card-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.route-card-header .route-name {
+    font-size: 1.3rem;
+    color: #333;
+    margin: 0;
+    display: inline-block; /* To allow span next to it */
+}
+
+.route-card-header .route-id {
+    font-size: 0.85rem;
+    color: #777;
+    margin-left: 8px;
+}
+
+.route-card-body {
+    flex-grow: 1; /* Pushes actions to the bottom */
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.route-card-body .route-description {
+    margin-bottom: 10px;
+}
+.route-card-body .route-description strong {
+    color: #444;
+}
+
+
+.route-card-body .route-stops-info {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #eee; 
+}
+
+.route-card-actions {
+    margin-top: 20px;
+    text-align: center; 
+}
+
+.route-card-actions .btn-block {
+    display: block;
+    width: 100%;
+}
+
+.btn-link-style {
+    color: #0056b3; 
+    text-decoration: underline;
+    font-weight: bold;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+.btn-link-style:hover {
+    color: #004494;
+}
+
+/* Refined alert style for empty state */
+.alert.text-center { 
+    text-align: center !important;
+}
+.alert i.fa-2x { 
+    font-size: 2em;
+}
+
+/* Stop List in Table (already covered by general table styles) */
+.stop-actions .btn { 
+    margin-bottom: 5px; /* Stack buttons on small screens if they wrap */
+}
+.stop-actions .btn:last-child {
+    margin-bottom: 0;
+}
+
+
+/* Location Details Display (e.g., in update form) */
+.location-details dl {
+    margin: 0;
+}
+.location-details dt {
+    font-weight: 600;
+    color: #495057;
+    width: 120px; /* Adjust for alignment */
+    float: left; /* Basic alignment */
+    clear: left;
+    margin-bottom: 8px;
+}
+.location-details dd {
+    margin-left: 130px; /* Adjust based on dt width */
+    margin-bottom: 8px;
+    color: #343a40;
+}
+
+/* Back Link */
+.back-link {
+    display: inline-block;
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+.back-link a { /* Style the <a> tag within .back-link */
+    color: #007bff;
+    text-decoration: none;
+}
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+
+/* Order Item display in refund_request_standalone.html */
+.order-item {
+    border: 1px solid #dee2e6;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+}
+.order-item h4 {
+    margin-top: 0;
+    color: #0056b3;
+}
+
+
+/* Utility classes (from your initial CSS) */
+.text-center { text-align: center; }
+.mt-1 { margin-top: 0.5rem !important; } /* Added !important for utility override if needed */
+.mt-2 { margin-top: 1rem !important; }
+.mb-1 { margin-bottom: 0.5rem !important; }
+.mb-2 { margin-bottom: 1rem !important; }

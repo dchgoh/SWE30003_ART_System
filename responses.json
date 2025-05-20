@@ -1,0 +1,16 @@
+[
+    {
+        "response_id": "resp-uuid-001",
+        "feedback_id": "fb-uuid-003",
+        "responder_admin_id": "admin_user_001",
+        "response_content": "Thank you for your suggestion regarding the new shopping mall route. We have passed this on to our planning department for consideration in future updates. We appreciate your feedback!",
+        "response_datetime": "2025-07-19T15:45:00+00:00"
+    },
+    {
+        "response_id": "5f34e8a8-0ea0-405d-bd49-b882555f31a2",
+        "feedback_id": "fb-uuid-002",
+        "responder_admin_id": "admin_user_001",
+        "response_content": "Thanks!",
+        "response_datetime": "2025-05-20T23:11:45.691902"
+    }
+]

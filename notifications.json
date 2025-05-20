@@ -1,0 +1,20 @@
+[
+    {
+        "notification_id": "notif-uuid-001",
+        "recipient_user_id": "mock_user_001",
+        "sender_user_id": "admin_user_001",
+        "message_content": "Admin has responded to your feedback (ID: fb-uuid-003). Response: 'Thank you for your suggestion regarding the new shopp...' (see details)",
+        "notification_type": "FeedbackResponse",
+        "sent_datetime": "2025-07-19T15:45:05+00:00",
+        "read_status": false
+    },
+    {
+        "notification_id": "7efa58f7-69cb-455a-bba9-710ae873d1cd",
+        "recipient_user_id": "another_user_id_example",
+        "sender_user_id": "admin_user_001",
+        "message_content": "Admin has responded to your feedback (ID: fb-uuid-002). Response: 'Thanks!...'",
+        "notification_type": "FeedbackResponse",
+        "sent_datetime": "2025-05-20T23:11:45.694967",
+        "read_status": false
+    }
+]

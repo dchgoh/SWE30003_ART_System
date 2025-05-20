@@ -1,0 +1,36 @@
+[
+    {
+        "feedback_id": "fb-uuid-001",
+        "submitter_user_id": "mock_user_001",
+        "feedback_content": "The bus was 15 minutes late for trip TRP001. Very inconvenient.",
+        "rating": 2,
+        "related_trip_id": "TRP001",
+        "status": "New",
+        "submission_datetime": "2025-07-20T10:30:00+00:00",
+        "response_ids": []
+    },
+    {
+        "feedback_id": "fb-uuid-002",
+        "submitter_user_id": "another_user_id_example",
+        "feedback_content": "The online booking system is very easy to use! Great job!",
+        "rating": 5,
+        "related_trip_id": null,
+        "status": "Responded",
+        "submission_datetime": "2025-07-21T14:00:00+00:00",
+        "response_ids": [
+            "5f34e8a8-0ea0-405d-bd49-b882555f31a2"
+        ]
+    },
+    {
+        "feedback_id": "fb-uuid-003",
+        "submitter_user_id": "mock_user_001",
+        "feedback_content": "Could you please add a route to the new shopping mall?",
+        "rating": null,
+        "related_trip_id": null,
+        "status": "Responded",
+        "submission_datetime": "2025-07-19T09:00:00+00:00",
+        "response_ids": [
+            "resp-uuid-001"
+        ]
+    }
+]

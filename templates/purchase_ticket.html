@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h2>Purchase a Ticket</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if trips %}
+        <p>Select a trip below to purchase a ticket:</p>
+        <form method="POST" action="{{ url_for('purchase_ticket_route') }}">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Trip ID</th>
+                        <th>Origin</th>
+                        <th>Destination</th>
+                        <th>Departure</th>
+                        <th>Price (RM)</th>
+                        <th>Seats Left</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trip in trips %}
+                    <tr>
+                        <td><input type="radio" name="trip_id" value="{{ trip.trip_id }}" required></td>
+                        <td>{{ trip.trip_id }}</td>
+                        <td>{{ trip.origin }}</td>
+                        <td>{{ trip.destination }}</td>
+                        <td>{{ trip.departure_time }}</td>
+                        <td>{{ "%.2f"|format(trip.price) }}</td>
+                        <td>{{ trip.available_seats }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+            <!-- Simple user ID input for now, replace with logged-in user logic later -->
+            <!-- <input type="hidden" name="user_id" value="mock_user_001"> -->
+            <!-- We are using mock_user_id in the backend route for now -->
+
+            <div>
+                <button type="submit" class="btn">Confirm Purchase (Mock Payment)</button>
+            </div>
+        </form>
+    {% else %}
+        <p>Sorry, no trips are currently available for booking.</p>
+    {% endif %}
+
+    <p><a href="{{ url_for('home') }}">Back to Homepage</a></p>
+
+{% endblock %}

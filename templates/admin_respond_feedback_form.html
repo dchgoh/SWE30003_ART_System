@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="admin-section-header">
+    <h2>Respond to Feedback</h2>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for cat, msg in messages %}<div class="flash-message {{cat}}">{{msg}}</div>{% endfor %}{% endif %}
+{% endwith %}
+
+<p class="back-link"><a href="{{ url_for('admin_manage_feedbacks_route') }}"><i class="fas fa-arrow-left"></i> Back to All Feedbacks</a></p>
+
+{% if feedback %}
+    <div class="feedback-details-card" style="background-color: #f9f9f9; border: 1px solid #eee; padding: 20px; border-radius: 5px; margin-bottom: 25px;">
+        <h4>Feedback Details (ID: {{ feedback.feedback_id }})</h4>
+        <p><strong>Submitted by:</strong> {{ submitter_name }} (User ID: {{ feedback.submitter_user_id }})</p>
+        <p><strong>Date Submitted:</strong> {{ feedback.submission_datetime.strftime('%Y-%m-%d %H:%M') }}</p>
+        <p><strong>Current Status:</strong> <span class="feedback-status status-{{ feedback.status|lower }}">{{ feedback.status }}</span></p>
+        {% if feedback.rating %}<p><strong>Rating:</strong> {{ feedback.rating }} / 5</p>{% endif %}
+        {% if feedback.related_trip_id %}<p><strong>Related Trip ID:</strong> {{ feedback.related_trip_id }}</p>{% endif %}
+        <p><strong>Feedback Content:</strong></p>
+        <pre style="background-color: #fff; border: 1px dashed #ccc; padding: 10px; white-space: pre-wrap; word-wrap: break-word;">{{ feedback.feedback_content }}</pre>
+    </div>
+
+    {% if existing_responses %}
+    <div class="existing-responses" style="margin-bottom: 25px;">
+        <h4>Previous Responses:</h4>
+        {% for response in existing_responses|sort(attribute='response_datetime', reverse=True) %}
+            <div class="response-item" style="border: 1px solid #e0e0e0; padding:10px; margin-bottom:10px; border-radius:4px; background-color: #f0f0f0;">
+                <p><strong>By Admin:</strong> {{ response.responder_admin_id }} on {{ response.response_datetime.strftime('%Y-%m-%d %H:%M') }}</p>
+                <pre style="background-color: #fff; padding: 8px; white-space: pre-wrap; word-wrap: break-word;">{{ response.response_content }}</pre>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if feedback.status != 'Closed' and feedback.status != 'Responded' %} {# Or adjust based on your workflow #}
+    <form method="POST" action="{{ url_for('admin_respond_to_feedback_route', feedback_id=feedback.feedback_id) }}">
+        <fieldset>
+            <legend>Your Response</legend>
+            <div>
+                <label for="response_text">Response Message:</label>
+                <textarea id="response_text" name="response_text" rows="6" required placeholder="Enter your reply to the user..."></textarea>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send Response & Notify User</button>
+            </div>
+        </fieldset>
+    </form>
+    {% else %}
+    <p class="alert alert-info">This feedback has already been responded to or closed. No further response required.</p>
+    {% endif %}
+
+{% else %}
+    <p class="alert alert-danger">Could not load feedback details.</p>
+{% endif %}
+
+<style> /* Page-specific, can be moved to main CSS */
+    .feedback-status { font-size: 0.9rem; padding: 3px 8px; border-radius: 10px; color: white; font-weight: bold; text-transform: uppercase;}
+    .status-new { background-color: #007bff; }
+    .status-pending { background-color: #ffc107; color: #333;}
+    .status-responded { background-color: #28a745; }
+    .status-closed { background-color: #6c757d; }
+</style>
+{% endblock %}

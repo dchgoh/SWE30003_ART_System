@@ -1,0 +1,14 @@
+[
+    {
+        "stop_id": "STOP006",
+        "stop_name": "Airport Terminal 1",
+        "location_id": "LOC006",
+        "stop_code": "AIRT1"
+    },
+    {
+        "stop_id": "STOP007",
+        "stop_name": "Airport Terminal 2",
+        "location_id": "LOC007",
+        "stop_code": "AIRT2"
+    }
+]

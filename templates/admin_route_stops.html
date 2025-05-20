@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Admin: Stops for Route - {{ route.route_name }}</h2>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for cat, msg in messages %}<div class="flash-message {{cat}}">{{msg}}</div>{% endfor %}{% endif %}
+{% endwith %}
+
+<p><a href="{{ url_for('admin_manage_routes_route') }}">« Back to All Routes</a></p>
+
+{% if stops_on_route %}
+    <table>
+        <thead><tr><th>Stop Name</th><th>Stop Code</th><th>Current Location</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for item in stops_on_route %}
+            <tr>
+                <td>{{ item.stop.stop_name }}</td>
+                <td>{{ item.stop.stop_code }}</td>
+                <td>
+                    {% if item.location %}
+                        {{ item.location.address_line1 }}, {{ item.location.city }} (Lat: {{ item.location.latitude }}, Lon: {{ item.location.longitude }})
+                    {% else %}
+                        No location data.
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('admin_update_stop_location_route', route_id=route.route_id, stop_id=item.stop.stop_id) }}" class="btn btn-small">Update Location</a>
+                    {# Add link for Remove Stop from Route #}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No stops assigned to this route yet. <a href="#">Add Stop to Route</a></p> {# Link to assign stop form #}
+{% endif %}
+{% endblock %}

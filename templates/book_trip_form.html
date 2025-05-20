@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h2>Confirm Booking for Trip: {{ trip.trip_id }}</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if trip %}
+        <h3>Trip Details:</h3>
+        <p><strong>Origin:</strong> {{ trip.origin }}</p>
+        <p><strong>Destination:</strong> {{ trip.destination }}</p>
+        <p><strong>Departure:</strong> {{ trip.departure_time }}</p>
+        <p><strong>Price:</strong> RM {{ "%.2f"|format(trip.price) }}</p>
+        <p><strong>Seats Available:</strong> {{ trip.available_seats }}</p> {# This will show updated seats after booking #}
+
+        {# Conditionally show the form or a success message #}
+        {% if not booking_successful %}
+            {% if trip.available_seats > 0 %}
+                <form method="POST" action="{{ url_for('book_trip_route', trip_id=trip.trip_id) }}">
+                    <br>
+                    <p>Click below to confirm your booking (payment will be simulated).</p>
+                    <div>
+                        <button type="submit" class="btn">Confirm & Pay (Mock)</button>
+                    </div>
+                </form>
+            {% else %}
+                <p style="color: red; font-weight: bold;">This trip is now fully booked.</p>
+            {% endif %}
+        {% else %}
+            <p>Your booking was successful!</p>
+            {# You might want to display ticket details here or a link to "My Bookings" #}
+        {% endif %}
+    {% else %}
+        <p>Trip details could not be loaded. Please try searching again.</p>
+    {% endif %}
+
+    <p style="margin-top: 20px;"><a href="{{ url_for('search_trips_route') }}">Back to Search Results</a></p>
+{% endblock %}

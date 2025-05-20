@@ -1,0 +1,20 @@
+[
+    {
+        "user_id": "user-id-1-uuid",
+        "username": "user1",
+        "email": "user1@example.com",
+        "password_hash": "actual_password_hash_for_user1"
+    },
+    {
+        "user_id": "mock_user_001",
+        "username": "mockuser",
+        "email": "mock@example.com",
+        "password_hash": "mock_hash_value"
+    },
+    {
+        "user_id": "another_user_id_example",
+        "username": "anotheruser",
+        "email": "another@example.com",
+        "password_hash": "another_hash_value"
+    }
+]

@@ -1,0 +1,42 @@
+[
+    {
+        "payment_id": "3b7b1c66-1b40-42d4-a225-462bb9e6de38",
+        "order_id": "a82831cb-b5ca-4666-968e-d26c2829c87b",
+        "amount": 15.0,
+        "method": "MockCard",
+        "status": "Completed",
+        "payment_datetime": "2025-05-20T15:39:10.739188"
+    },
+    {
+        "payment_id": "b04c6c71-bfe1-46cd-87f9-ec5228658fe6",
+        "order_id": "c6f22e7b-3dbd-4740-8cd0-4988bc45d27e",
+        "amount": 15.0,
+        "method": "MockCard",
+        "status": "Refunded",
+        "payment_datetime": "2025-05-20T15:58:16.811696"
+    },
+    {
+        "payment_id": "09a5848b-97cb-48c8-80f8-1f1d91369e9a",
+        "order_id": "40fcef6c-3341-49b2-92ef-3c657ffdc456",
+        "amount": 15.0,
+        "method": "MockCard",
+        "status": "Refunded",
+        "payment_datetime": "2025-05-20T19:42:21.673264"
+    },
+    {
+        "payment_id": "04ad4b04-1b70-4d00-9bc5-20c17e7b5302",
+        "order_id": "3929ef43-536f-42bc-a889-3bd3f7fb8ca2",
+        "amount": 15.0,
+        "method": "MockCard",
+        "status": "Refunded",
+        "payment_datetime": "2025-05-20T19:43:13.325999"
+    },
+    {
+        "payment_id": "4913c4d5-4b43-4206-918a-8f565a752172",
+        "order_id": "10fa2fcf-e33b-4c07-be26-8bce6cba4997",
+        "amount": 60.0,
+        "method": "MockCard",
+        "status": "Refunded",
+        "payment_datetime": "2025-05-20T23:27:23.523021"
+    }
+]

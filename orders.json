@@ -1,0 +1,20 @@
+[
+    {
+        "order_id": "a82831cb-b5ca-4666-968e-d26c2829c87b",
+        "user_id": "mock_user_001",
+        "trip_id": "TRP001",
+        "num_tickets": 1,
+        "total_amount": 15.0,
+        "order_datetime": "2025-05-20T15:39:10.737584",
+        "status": "Refunded"
+    },
+    {
+        "order_id": "10fa2fcf-e33b-4c07-be26-8bce6cba4997",
+        "user_id": "mock_user_001",
+        "trip_id": "TRP002",
+        "num_tickets": 1,
+        "total_amount": 60.0,
+        "order_datetime": "2025-05-20T23:27:23.520860",
+        "status": "Refunded"
+    }
+]

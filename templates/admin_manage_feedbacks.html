@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="admin-section-header">
+    <h2>Admin Dashboard: User Feedbacks</h2>
+    {# Maybe a refresh button or other actions later #}
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for category, message in messages %}
+        <div class="flash-message {{ category }}">{{ message }}</div>
+    {% endfor %}{% endif %}
+{% endwith %}
+
+<form method="GET" action="{{ url_for('admin_manage_feedbacks_route') }}" class="filter-form mb-2">
+    <label for="status_filter">Filter by Status:</label>
+    <select name="status" id="status_filter" onchange="this.form.submit()">
+        {% for status_option in all_statuses %}
+            <option value="{{ status_option }}" {% if status_option == current_status_filter %}selected{% endif %}>
+                {{ status_option }}
+            </option>
+        {% endfor %}
+    </select>
+    <noscript><button type="submit" class="btn btn-small">Filter</button></noscript>
+</form>
+
+
+{% if feedbacks_data %}
+    <p>Showing feedbacks with status: <strong>{{ current_status_filter }}</strong>. Click "View & Respond" to reply.</p>
+    <div class="feedback-list-container">
+        {% for item in feedbacks_data %}
+        <div class="feedback-card">
+            <div class="feedback-card-header">
+                <h4 class="feedback-id">Feedback ID: {{ item.feedback.feedback_id }}</h4>
+                <span class="feedback-status status-{{ item.feedback.status|lower }}">{{ item.feedback.status }}</span>
+            </div>
+            <div class="feedback-card-body">
+                <p><strong>Submitted by:</strong> {{ item.submitter_name }} (User ID: {{ item.feedback.submitter_user_id }})</p>
+                <p><strong>Date:</strong> {{ item.feedback.submission_datetime.strftime('%Y-%m-%d %H:%M') }}</p>
+                {% if item.feedback.rating %}
+                    <p><strong>Rating:</strong> {{ item.feedback.rating }} / 5</p>
+                {% endif %}
+                {% if item.feedback.related_trip_id %}
+                    <p><strong>Related Trip ID:</strong> {{ item.feedback.related_trip_id }}</p>
+                {% endif %}
+                <p class="feedback-content-preview">
+                    <strong>Content:</strong> <em>{{ item.feedback.feedback_content|truncate(100, True) }}</em>
+                </p>
+                 <p><small>Number of responses: {{ item.responses|length }}</small></p>
+            </div>
+            <div class="feedback-card-actions">
+                <a href="{{ url_for('admin_respond_to_feedback_route', feedback_id=item.feedback.feedback_id) }}" class="btn btn-primary btn-small">
+                    <i class="fas fa-reply"></i> View & Respond
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info text-center" role="alert">
+        <i class="fas fa-comment-slash fa-2x" style="margin-bottom: 10px;"></i><br>
+        <strong>No feedbacks found matching status '{{ current_status_filter }}'.</strong>
+    </div>
+{% endif %}
+
+<p class="back-link" style="margin-top: 30px; text-align: center;">
+    <a href="{{ url_for('home') }}"><i class="fas fa-arrow-left"></i> Back to Main Admin Menu</a>
+</p>
+
+<style> /* Page-specific styles, can move to main CSS */
+    .filter-form { margin-bottom: 20px; display: flex; align-items: center; gap: 10px;}
+    .filter-form label { margin-bottom: 0; }
+    .feedback-list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
+    .feedback-card { background: #fff; border: 1px solid #ddd; border-radius: 5px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column;}
+    .feedback-card:hover { box-shadow: 0 3px 8px rgba(0,0,0,0.1); }
+    .feedback-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #eee;}
+    .feedback-card-header .feedback-id { font-size: 1.1rem; margin: 0; color: #333;}
+    .feedback-card-header .feedback-status { font-size: 0.8rem; padding: 3px 8px; border-radius: 10px; color: white; font-weight: bold; text-transform: uppercase;}
+    .status-new { background-color: #007bff; }      /* Blue */
+    .status-pending { background-color: #ffc107; color: #333;} /* Yellow */
+    .status-responded { background-color: #28a745; } /* Green */
+    .status-closed { background-color: #6c757d; }   /* Grey */
+    .feedback-card-body { font-size: 0.9rem; color: #555; flex-grow: 1;}
+    .feedback-card-body p { margin-bottom: 8px; }
+    .feedback-content-preview { max-height: 60px; overflow: hidden; text-overflow: ellipsis; }
+    .feedback-card-actions { margin-top: 15px; text-align: right; }
+</style>
+{% endblock %}

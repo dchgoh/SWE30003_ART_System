@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Update Location for Stop: {{ stop.stop_name }} (Route: {{route.route_name}})</h2>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for cat, msg in messages %}<div class="flash-message {{cat}}">{{msg}}</div>{% endfor %}{% endif %}
+{% endwith %}
+
+<p><a href="{{ url_for('admin_route_stops_route', route_id=route.route_id) }}">« Back to Stops for {{route.route_name}}</a></p>
+
+<form method="POST" action="{{ url_for('admin_update_stop_location_route', route_id=route.route_id, stop_id=stop.stop_id) }}">
+    <div>
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="latitude" value="{{ request.form.latitude or current_location.latitude }}" required>
+    </div>
+    <div>
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="longitude" value="{{ request.form.longitude or current_location.longitude }}" required>
+    </div>
+    <div>
+        <label for="address">Address Line 1:</label>
+        <input type="text" id="address" name="address" value="{{ request.form.address or current_location.address_line1 }}" required>
+    </div>
+    <div>
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" value="{{ request.form.city or current_location.city }}" required>
+    </div>
+    <div>
+        <label for="postcode">Postcode:</label>
+        <input type="text" id="postcode" name="postcode" value="{{ request.form.postcode or current_location.postcode }}" required>
+    </div>
+    <div>
+        <button type="submit" class="btn">Update Location Details</button>
+    </div>
+</form>
+{% endblock %}

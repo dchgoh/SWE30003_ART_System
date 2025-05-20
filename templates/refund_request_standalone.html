@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h2>Standalone Refund Demonstration</h2>
+    <p>This page lists sample orders for user: <strong>{{ mock_user_id }}</strong>. You can attempt to refund "Completed" orders.</p>
+    <p><em>Ensure you have sample "Completed" orders, with associated tickets and payments, for this user in your JSON data files.</em></p>
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <h3>Sample Orders:</h3>
+    {% if orders_to_display %}
+        {% for item in orders_to_display %}
+            <div class="order-item" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px; background-color: #f9f9f9;">
+                <h4>Order ID: {{ item.order.order_id }}</h4>
+                <p>
+                    {% if item.trip %}
+                        Trip: {{ item.trip.origin }} to {{ item.trip.destination }} ({{ item.trip.departure_time }}) <br>
+                    {% else %}
+                        Trip data missing for this order. <br>
+                    {% endif %}
+                    Tickets: {{ item.order.num_tickets }} | Total Paid: RM {{ "%.2f"|format(item.order.total_amount) }} <br>
+                    {# CORRECTED SPAN BELOW #}
+                    <strong>Current Order Status: 
+                        <span class="
+                            {% if item.order.status == 'Completed' %}
+                                status-completed
+                            {% elif item.order.status == 'Refunded' or item.order.status == 'Cancelled' or item.order.status == 'PartiallyRefunded' %}
+                                status-refunded 
+                            {% else %}
+                                status-error
+                            {% endif %}
+                        ">
+                            {{ item.order.status }}
+                        </span>
+                    </strong>
+                </p>
+                
+                {% if item.order.status == "Completed" %}
+                    <form method="POST" action="{{ url_for('request_refund_standalone_route') }}" style="display: inline;">
+                        <input type="hidden" name="order_id_to_refund" value="{{ item.order.order_id }}">
+                        <button type="submit" class="btn btn-warning btn-small">Attempt Refund for this Order</button>
+                    </form>
+                {% elif item.order.status in ["Refunded", "Cancelled", "PartiallyRefunded"] %}
+                    <p style="color: green;">This order has already been processed.</p> {# Kept inline style for simplicity here, but could also be a class #}
+                {% else %}
+                     <p style="color: orange;">Not eligible for refund via this demo (Status: {{ item.order.status }}).</p> {# Kept inline style #}
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No sample orders found for user '{{ mock_user_id }}'.</p>
+        <p>Please create sample data in <code>orders.json</code>, <code>tickets.json</code>, and <code>payments.json</code> for this user.</p>
+        <p>Example <code>orders.json</code> entry for user 'mock_user_001':</p>
+        <pre style="background-color:#eee; padding:5px; border:1px solid #ddd; font-size:0.9em;">
+[
+    {
+        "order_id": "sample-order-for-refund-001",
+        "user_id": "mock_user_001",
+        "trip_id": "TRP001", 
+        "num_tickets": 1,
+        "total_amount": 15.00,
+        "order_datetime": "2025-07-01T10:00:00.000000",
+        "status": "Completed"
+    }
+]
+        </pre>
+        <p>Ensure corresponding ticket(s) in <code>tickets.json</code> (status: "Active", matching order_id, and a payment_id) and a payment in <code>payments.json</code> (status: "Completed", matching order_id).</p>
+
+    {% endif %}
+
+    <p style="margin-top: 20px;"><a href="{{ url_for('home') }}">Back to Homepage</a></p>
+{% endblock %}

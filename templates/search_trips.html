@@ -1,0 +1,78 @@
+<!-- templates/search_trips.html -->
+{% extends "layout.html" %}
+
+{% block content %}
+    <h2>Search & Book ART Tickets</h2>
+
+    {# Flash messages remain the same #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="GET" action="{{ url_for('search_trips_route') }}" class="search-form">
+        <div>
+            <label for="origin">Origin:</label>
+            <input type="text" id="origin" name="origin" value="{{ search_origin or '' }}">
+        </div>
+        <div>
+            <label for="destination">Destination:</label>
+            <input type="text" id="destination" name="destination" value="{{ search_destination or '' }}">
+        </div>
+        <div>
+            <label for="date">Date (YYYY-MM-DD):</label>
+            <input type="text" id="date" name="date" placeholder="e.g., 2025-07-15" value="{{ search_date or '' }}">
+        </div>
+        <div>
+            <button type="submit" class="btn">Search Trips</button>
+        </div>
+    </form>
+
+    <hr style="margin-top: 30px; margin-bottom: 30px;"> <!-- Visual separator -->
+
+    {% if trips %}
+        <h3>Available Trips</h3>
+        <div class="table-responsive-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trip ID</th>
+                        <th>Origin</th>
+                        <th>Destination</th>
+                        <th>Departure</th>
+                        <th>Price (RM)</th>
+                        <th>Seats Left</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trip in trips %}
+                    <tr>
+                        <td data-label="Trip ID">{{ trip.trip_id }}</td>
+                        <td data-label="Origin">{{ trip.origin }}</td>
+                        <td data-label="Destination">{{ trip.destination }}</td>
+                        <td data-label="Departure">{{ trip.departure_time }}</td>
+                        <td data-label="Price (RM)">{{ "%.2f"|format(trip.price) }}</td>
+                        <td data-label="Seats Left">{{ trip.available_seats }}</td>
+                        <td data-label="Action">
+                            <a href="{{ url_for('book_trip_route', trip_id=trip.trip_id) }}" class="btn btn-small">Book Now</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        {# Display a message based on whether a search was performed #}
+        {% if search_performed %}
+            <p>No trips found matching your criteria.</p>
+        {% else %}
+            <p>No trips are currently available. Please check back later or try a different search.</p>
+        {% endif %}
+    {% endif %}
+
+    <p style="margin-top: 20px;"><a href="{{ url_for('home') }}">Back to Homepage</a></p>
+{% endblock %}
