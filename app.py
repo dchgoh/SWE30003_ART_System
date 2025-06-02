@@ -322,16 +322,14 @@ def admin_respond_to_feedback_route(feedbackID):
 
 # --- Main execution ---
 if __name__ == '__main__':
-    # Initialize some sample data if files are empty (optional, for easier first run)
-    # You might want a more robust seeding script for complex data.
-    # For example, ensure mock_user_001 and admin_user_001 exist in users.json
-    # TripRepository already initializes sample trips if trips.json is empty.
     
-    # Example: Ensure mock users exist
-    if not User.find_by_id(mock_userID):
+   # Ensure mock users exist
+    if not User.findByID(mock_userID): # Assuming mock_userID is correctly defined and used
         User(username="mockuser", email="mock@example.com", password="password", userID=mock_userID).save()
-    if not User.find_by_id(mock_adminID): # Assuming Admin inherits User and is saved via User.save()
-        Admin(username="admin", email="admin@example.com", password="adminpassword", userID=mock_adminID, admin_level="superuser").save()
+    
+    # Use the defined variable name: mock_adminID
+    if not User.findByID(mock_adminID): 
+        Admin(username="admin", email="admin@example.com", password="adminpassword", userID=mock_adminID, adminLevel="superuser").save()
 
 
     app.run(debug=True)

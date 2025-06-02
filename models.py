@@ -6,7 +6,7 @@ import json
 import os
 
 # --- Helper function for JSON file operations ---
-def _load_data(file_path):
+def _loadData(file_path):
     if not os.path.exists(file_path):
         with open(file_path, 'w') as f:
             json.dump([], f)
@@ -26,7 +26,7 @@ def _load_data(file_path):
             print(f"Warning: Could not decode JSON from {file_path}. Returning empty list.")
             return []
 
-def _save_data(file_path, all_items_data):
+def _saveData(file_path, all_items_data):
     with open(file_path, 'w') as f:
         json.dump(all_items_data, f, indent=4)
 
@@ -48,116 +48,223 @@ NOTIFICATION_DATA_FILE = 'notifications.json'
 class User:
     FILE_PATH = USER_DATA_FILE
 
-    def __init__(self, username, email, password, userID=None, isAdmin=False, admin_level=None):
+    def __init__(self, username, email, password, userID=None, 
+                 # Attributes from A2 User that might be common
+                 phone=None, firstName=None, lastName=None, 
+                 dateRegistered=None, accountStatus="Active"):
         self.userID = userID if userID else str(uuid.uuid4())
         self.username = username
         self.email = email
-        if password:
-            self.password_hash = self._hash_password(password)
-        else:
-            self.password_hash = None 
-        self.isAdmin = isAdmin
-        self.admin_level = admin_level if isAdmin else None
+        self.passwordHash = self._hashPassword(password) if password else None
+        
+        # Common attributes from A2 User diagram (optional, add if you use them)
+        self.phone = phone
+        self.firstName = firstName
+        self.lastName = lastName
+        self.dateRegistered = dateRegistered if dateRegistered else datetime.now()
+        self.accountStatus = accountStatus
 
-    def _hash_password(self, password):
+    def _hashPassword(self, password):
         return hashlib.sha256(password.encode()).hexdigest()
 
-    def check_password(self, password_to_check):
-        if not self.password_hash or not password_to_check:
-            return False
-        return self.password_hash == self._hash_password(password_to_check)
+    def checkPassword(self, passwordToCheck):
+        if not self.passwordHash or not passwordToCheck: return False
+        return self.passwordHash == self._hashPassword(passwordToCheck)
 
-    def to_dict(self):
+    def toDict(self):
+        """Converts the User object to a dictionary for JSON serialization."""
         data = {
             'userID': self.userID,
             'username': self.username,
             'email': self.email,
-            'password_hash': self.password_hash,
-            'isAdmin': self.isAdmin
+            'passwordHash': self.passwordHash,
+            'phone': self.phone,
+            'firstName': self.firstName,
+            'lastName': self.lastName,
+            'dateRegistered': self.dateRegistered.isoformat() if isinstance(self.dateRegistered, datetime) else str(self.dateRegistered),
+            'accountStatus': self.accountStatus,
+            '_userType': self.__class__.__name__ # Store the actual class name
         }
-        if self.isAdmin:
-            data['admin_level'] = self.admin_level
         return data
     
     @classmethod
-    def from_dict(cls, data):
+    def fromDict(cls, data):
+        """
+        Factory method to create User, Admin, or ArtPassenger based on _userType.
+        This method should ideally be called by findByID, getAll etc.
+        """
         if not isinstance(data, dict):
-            print(f"Error: User.from_dict expected dict, got {type(data)}: {data}")
+            print(f"Error: User.fromDict expected dict, got {type(data)}: {data}")
             return None
-        user = cls(
-            username=data.get('username'), 
-            email=data.get('email'), 
-            password=None,
-            userID=data.get('userID'),
-            isAdmin=data.get('isAdmin', False),
-            admin_level=data.get('admin_level') if data.get('isAdmin') else None
-        )
-        user.password_hash = data.get('password_hash')
-        if not all([user.userID, user.username, user.email, user.password_hash]):
-            # print(f"Warning: User data missing critical fields: {data}") # Can be noisy
-            return None # Invalid user object
-        return user
+
+        userType = data.get('_userType')
+        
+        # Common attributes extraction
+        userID = data.get('userID')
+        username = data.get('username')
+        email = data.get('email')
+        passwordHashFromData = data.get('passwordHash')
+        phone = data.get('phone')
+        firstName = data.get('firstName')
+        lastName = data.get('lastName')
+        dateRegisteredStr = data.get('dateRegistered')
+        accountStatus = data.get('accountStatus', "Active")
+
+        dateRegistered = None
+        if dateRegisteredStr:
+            try: dateRegistered = datetime.fromisoformat(dateRegisteredStr)
+            except ValueError: dateRegistered = datetime.now() # Fallback
+
+        # Basic validation
+        if not userID or not username or not email or not passwordHashFromData:
+            print(f"Warning: User data missing critical fields (userID, username, email, passwordHash). Data: {data}")
+            return None
+
+        instance = None
+        if userType == "Admin":
+            instance = Admin(username=username, email=email, password=None, userID=userID,
+                             phone=phone, firstName=firstName, lastName=lastName,
+                             dateRegistered=dateRegistered, accountStatus=accountStatus,
+                             adminLevel=data.get('adminLevel', 'default')) # Get admin specific
+        elif userType == "ArtPassenger":
+            instance = ArtPassenger(username=username, email=email, password=None, userID=userID,
+                                    phone=phone, firstName=firstName, lastName=lastName,
+                                    dateRegistered=dateRegistered, accountStatus=accountStatus,
+                                    # Get ArtPassenger specific attributes
+                                    paymentMethods=data.get('paymentMethods', []), 
+                                    bookingHistory=data.get('bookingHistory', []),
+                                    preferences=data.get('preferences', {}),
+                                    loyaltyPoints=data.get('loyaltyPoints', 0))
+        else: # Default to base User or handle as error
+            instance = cls(username=username, email=email, password=None, userID=userID,
+                           phone=phone, firstName=firstName, lastName=lastName,
+                           dateRegistered=dateRegistered, accountStatus=accountStatus)
+        
+        if instance:
+            instance.passwordHash = passwordHashFromData
+        return instance
 
     def save(self):
-        all_users_data = _load_data(User.FILE_PATH)
+        allUsersData = _loadData(User.FILE_PATH)
         updated = False
-        # Check for conflicts before attempting to save if it's a new user (no userID match)
-        is_new_user = True
-        for i, user_data_dict in enumerate(all_users_data):
-            if user_data_dict.get('userID') == self.userID:
-                # This is an update
-                all_users_data[i] = self.to_dict()
-                updated = True
-                is_new_user = False
-                break
+        isNewUser = True
+        dict_to_save = self.toDict() # Get data from the correct instance (User, Admin, or ArtPassenger)
+
+        for i, userDataDict in enumerate(allUsersData):
+            if userDataDict.get('userID') == self.userID:
+                allUsersData[i] = dict_to_save
+                updated = True; isNewUser = False; break
         
-        if is_new_user: # Only check for username/email conflict if it's a new user
-            for user_data_dict in all_users_data:
-                if user_data_dict.get('username') == self.username:
-                    print(f"Error: Username '{self.username}' already exists.")
-                    return False
-                if user_data_dict.get('email') == self.email:
-                    print(f"Error: Email '{self.email}' already exists.")
-                    return False
-            all_users_data.append(self.to_dict())
-        elif not updated and not is_new_user: # Should not happen if ID is unique
-             print(f"Error: User with ID {self.userID} not found for update, but not treated as new.")
-             return False
+        if isNewUser:
+            for userDataDict in allUsersData: # Conflict check for new users
+                if userDataDict.get('username') == self.username: print(f"Error: Username exists."); return False
+                if userDataDict.get('email') == self.email: print(f"Error: Email exists."); return False
+            allUsersData.append(dict_to_save)
+        elif not updated and not isNewUser: return False
 
-
-        _save_data(User.FILE_PATH, all_users_data)
-        return True
+        _saveData(User.FILE_PATH, allUsersData); return True
 
     @classmethod
-    def find_by_id(cls, userID_to_find):
-        all_users_data = _load_data(User.FILE_PATH)
-        for user_data in all_users_data:
-            if user_data.get('userID') == userID_to_find:
-                return cls.from_dict(user_data)
+    def findByID(cls, userIDToFind):
+        allUsersData = _loadData(User.FILE_PATH)
+        for userData in allUsersData:
+            if userData.get('userID') == userIDToFind:
+                # Use the factory fromDict to create the correct type
+                return User.fromDict(userData) 
         return None
 
     @classmethod
-    def find_by_username(cls, username_to_find):
-        all_users_data = _load_data(User.FILE_PATH)
-        for user_data in all_users_data:
-            if user_data.get('username') == username_to_find:
-                return cls.from_dict(user_data)
+    def findByUsername(cls, usernameToFind):
+        allUsersData = _loadData(User.FILE_PATH)
+        for userData in allUsersData:
+            if userData.get('username') == usernameToFind:
+                return User.fromDict(userData)
         return None
     
     @classmethod
-    def get_all(cls):
-        all_users_data = _load_data(User.FILE_PATH)
-        users = []
-        for user_data in all_users_data:
-            user_obj = cls.from_dict(user_data)
-            if user_obj:
-                users.append(user_obj)
+    def getAll(cls):
+        allUsersData = _loadData(User.FILE_PATH); users = []
+        for userData in allUsersData:
+            userObj = User.fromDict(userData) # Use factory
+            if userObj: users.append(userObj)
         return users
 
+# --- ArtPassenger Child Class ---
+class ArtPassenger(User):
+    def __init__(self, username, email, password, userID=None, 
+                 phone=None, firstName=None, lastName=None, 
+                 dateRegistered=None, accountStatus="Active",
+                 # ArtPassenger specific attributes from A2 UML
+                 paymentMethods=None, bookingHistory=None, preferences=None, loyaltyPoints=0):
+        super().__init__(username, email, password, userID, phone, firstName, lastName, dateRegistered, accountStatus)
+        self.paymentMethods = paymentMethods if paymentMethods is not None else [] # e.g., list of payment method details/tokens
+        self.bookingHistory = bookingHistory if bookingHistory is not None else [] # e.g., list of orderIDs
+        self.preferences = preferences if preferences is not None else {} # e.g., dict of user prefs
+        self.loyaltyPoints = int(loyaltyPoints)
 
+    def toDict(self):
+        data = super().toDict()
+        data.update({
+            'paymentMethods': self.paymentMethods,
+            'bookingHistory': self.bookingHistory,
+            'preferences': self.preferences,
+            'loyaltyPoints': self.loyaltyPoints
+        })
+        return data
+
+    # fromDict is handled by User.fromDict factory method
+    
+    # --- ArtPassenger specific methods from A2 UML (logic now in app.py or other models) ---
+    # These methods would be called from app.py, using the ArtPassenger instance
+    # They might interact with Order, Ticket, Feedback models directly
+    def makeBooking(self, tripID, numTickets=1):
+        # This method on ArtPassenger would now primarily delegate or be a thin wrapper.
+        # The actual booking logic involving Order, Ticket, Payment creation and saving
+        # would be in app.py or potentially a (now removed) BookingService.
+        # For the "Smart Models" approach, app.py would do:
+        # trip = Trip.findByID(tripID)
+        # order = Order(userID=self.userID, tripID=tripID, ...)
+        # order.save() ... etc.
+        print(f"User {self.username} attempting to book {numTickets} for trip {tripID}. (Logic in app.py)")
+        # This method can return data needed by app.py to proceed
+        return {"status": "pending_app_logic", "userID": self.userID, "tripID": tripID}
+
+    def submitFeedback(self, feedbackContent, rating=None, relatedTripID=None):
+        # Logic in app.py will create Feedback object and save it
+        print(f"User {self.username} submitting feedback: {feedbackContent}. (Logic in app.py)")
+        # This method can return data needed by app.py
+        return {"status": "pending_app_logic", "userID": self.userID, "content": feedbackContent}
+
+
+# --- Admin Child Class ---
 class Admin(User):
-    def __init__(self, username, email, password, userID=None, admin_level="superuser"):
-        super().__init__(username, email, password, userID, isAdmin=True, admin_level=admin_level)
+    def __init__(self, username, email, password, userID=None, 
+                 phone=None, firstName=None, lastName=None, 
+                 dateRegistered=None, accountStatus="Active",
+                 # Admin specific attributes from A2 UML
+                 adminLevel="staff", permissions=None, assignedArea=None):
+        super().__init__(username, email, password, userID, phone, firstName, lastName, dateRegistered, accountStatus)
+        self.adminLevel = adminLevel
+        self.permissions = permissions if permissions is not None else [] # e.g. list of permission strings
+        self.assignedArea = assignedArea
+
+    def toDict(self):
+        data = super().toDict()
+        data.update({
+            'adminLevel': self.adminLevel,
+            'permissions': self.permissions,
+            'assignedArea': self.assignedArea
+        })
+        return data
+    
+    # fromDict is handled by User.fromDict factory method
+
+    # --- Admin specific methods from A2 UML (logic now in app.py or other models) ---
+    # Example:
+    def respondToFeedback(self, feedbackID, responseText):
+        # Logic in app.py will find Feedback, create Response, save, etc.
+        print(f"Admin {self.username} responding to feedback {feedbackID}. (Logic in app.py)")
+        return {"status": "pending_app_logic", "feedbackID": feedbackID, "adminID": self.userID}
 
 
 # --- Trip Model ---
@@ -201,7 +308,7 @@ class Trip:
 
 
     def save(self):
-        all_data = _load_data(Trip.FILE_PATH)
+        all_data = _loadData(Trip.FILE_PATH)
         updated = False
         for i, item_data in enumerate(all_data):
             if item_data.get('tripID') == self.tripID:
@@ -210,11 +317,11 @@ class Trip:
                 break
         if not updated:
             all_data.append(self.to_dict())
-        _save_data(Trip.FILE_PATH, all_data)
+        _saveData(Trip.FILE_PATH, all_data)
 
     @classmethod
     def find_by_id(cls, item_id):
-        all_data = _load_data(Trip.FILE_PATH)
+        all_data = _loadData(Trip.FILE_PATH)
         for item_data in all_data:
             if item_data.get('tripID') == item_id:
                 return cls.from_dict(item_data)
@@ -222,7 +329,7 @@ class Trip:
 
     @classmethod
     def get_all(cls):
-        all_data = _load_data(Trip.FILE_PATH)
+        all_data = _loadData(Trip.FILE_PATH)
         items = []
         for item_data in all_data:
             item_obj = cls.from_dict(item_data)
@@ -299,22 +406,22 @@ class Payment:
         return payment
 
     def save(self):
-        all_data = _load_data(Payment.FILE_PATH); updated = False
+        all_data = _loadData(Payment.FILE_PATH); updated = False
         for i, item_data in enumerate(all_data):
             if item_data.get('paymentID') == self.paymentID: all_data[i] = self.to_dict(); updated = True; break
         if not updated: all_data.append(self.to_dict())
-        _save_data(Payment.FILE_PATH, all_data)
+        _saveData(Payment.FILE_PATH, all_data)
 
     @classmethod
     def find_by_id(cls, item_id):
-        all_data = _load_data(Payment.FILE_PATH)
+        all_data = _loadData(Payment.FILE_PATH)
         for item_data in all_data:
             if item_data.get('paymentID') == item_id: return cls.from_dict(item_data)
         return None
 
     @classmethod
     def find_by_orderID(cls, orderID_to_find):
-        all_data = _load_data(Payment.FILE_PATH)
+        all_data = _loadData(Payment.FILE_PATH)
         for item_data in all_data:
             if item_data.get('orderID') == orderID_to_find: return cls.from_dict(item_data)
         return None
@@ -362,22 +469,22 @@ class Ticket:
         return ticket
 
     def save(self):
-        all_data = _load_data(Ticket.FILE_PATH); updated = False
+        all_data = _loadData(Ticket.FILE_PATH); updated = False
         for i, item_data in enumerate(all_data):
             if item_data.get('ticketID') == self.ticketID: all_data[i] = self.to_dict(); updated = True; break
         if not updated: all_data.append(self.to_dict())
-        _save_data(Ticket.FILE_PATH, all_data)
+        _saveData(Ticket.FILE_PATH, all_data)
 
     @classmethod
     def find_by_id(cls, item_id):
-        all_data = _load_data(Ticket.FILE_PATH)
+        all_data = _loadData(Ticket.FILE_PATH)
         for item_data in all_data:
             if item_data.get('ticketID') == item_id: return cls.from_dict(item_data)
         return None
         
     @classmethod
     def find_by_orderID(cls, orderID_to_find):
-        all_data = _load_data(Ticket.FILE_PATH)
+        all_data = _loadData(Ticket.FILE_PATH)
         tickets = []
         for item_data in all_data:
             if item_data.get('orderID') == orderID_to_find:
@@ -387,10 +494,10 @@ class Ticket:
         
     @classmethod
     def delete_by_orderID(cls, orderID_to_delete):
-        all_data = _load_data(Ticket.FILE_PATH)
+        all_data = _loadData(Ticket.FILE_PATH)
         remaining_items = [item for item in all_data if item.get('orderID') != orderID_to_delete]
         if len(remaining_items) < len(all_data): # Check if any were actually removed
-            _save_data(Ticket.FILE_PATH, remaining_items)
+            _saveData(Ticket.FILE_PATH, remaining_items)
             return True
         return False
 
@@ -434,22 +541,22 @@ class Order:
         return order
 
     def save(self):
-        all_data = _load_data(Order.FILE_PATH); updated = False
+        all_data = _loadData(Order.FILE_PATH); updated = False
         for i, item_data in enumerate(all_data):
             if item_data.get('orderID') == self.orderID: all_data[i] = self.to_dict(); updated = True; break
         if not updated: all_data.append(self.to_dict())
-        _save_data(Order.FILE_PATH, all_data)
+        _saveData(Order.FILE_PATH, all_data)
 
     @classmethod
     def find_by_id(cls, item_id):
-        all_data = _load_data(Order.FILE_PATH)
+        all_data = _loadData(Order.FILE_PATH)
         for item_data in all_data:
             if item_data.get('orderID') == item_id: return cls.from_dict(item_data)
         return None
 
     @classmethod
     def find_by_userID(cls, userID_to_find):
-        all_data = _load_data(Order.FILE_PATH)
+        all_data = _loadData(Order.FILE_PATH)
         orders = []
         for item_data in all_data:
             if item_data.get('userID') == userID_to_find:
@@ -503,11 +610,11 @@ class Refund:
         return refund
         
     def save(self):
-        all_data = _load_data(Refund.FILE_PATH); updated = False
+        all_data = _loadData(Refund.FILE_PATH); updated = False
         for i, item_data in enumerate(all_data):
             if item_data.get('refundID') == self.refundID: all_data[i] = self.to_dict(); updated = True; break
         if not updated: all_data.append(self.to_dict())
-        _save_data(Refund.FILE_PATH, all_data)
+        _saveData(Refund.FILE_PATH, all_data)
 
 
 # --- Location Model ---
@@ -545,22 +652,22 @@ class Location:
             return None
 
     def save(self):
-        all_data = _load_data(Location.FILE_PATH); updated = False
+        all_data = _loadData(Location.FILE_PATH); updated = False
         for i, item_data in enumerate(all_data):
             if item_data.get('locationID') == self.locationID: all_data[i] = self.to_dict(); updated = True; break
         if not updated: all_data.append(self.to_dict())
-        _save_data(Location.FILE_PATH, all_data)
+        _saveData(Location.FILE_PATH, all_data)
 
     @classmethod
     def find_by_id(cls, item_id):
-        all_data = _load_data(Location.FILE_PATH)
+        all_data = _loadData(Location.FILE_PATH)
         for item_data in all_data:
             if item_data.get('locationID') == item_id: return cls.from_dict(item_data)
         return None
 
     @classmethod
     def get_all(cls):
-        all_data = _load_data(Location.FILE_PATH)
+        all_data = _loadData(Location.FILE_PATH)
         items = []; [items.append(obj) for item_data in all_data if (obj := cls.from_dict(item_data))]
         return items
 
@@ -596,22 +703,22 @@ class Stop:
         return False, f"Location with ID {self.locationID} not found for this stop."
 
     def save(self):
-        all_data = _load_data(Stop.FILE_PATH); updated = False
+        all_data = _loadData(Stop.FILE_PATH); updated = False
         for i, item_data in enumerate(all_data):
             if item_data.get('stopID') == self.stopID: all_data[i] = self.to_dict(); updated = True; break
         if not updated: all_data.append(self.to_dict())
-        _save_data(Stop.FILE_PATH, all_data)
+        _saveData(Stop.FILE_PATH, all_data)
 
     @classmethod
     def find_by_id(cls, item_id):
-        all_data = _load_data(Stop.FILE_PATH)
+        all_data = _loadData(Stop.FILE_PATH)
         for item_data in all_data:
             if item_data.get('stopID') == item_id: return cls.from_dict(item_data)
         return None
 
     @classmethod
     def get_all(cls):
-        all_data = _load_data(Stop.FILE_PATH)
+        all_data = _loadData(Stop.FILE_PATH)
         items = []; [items.append(obj) for item_data in all_data if (obj := cls.from_dict(item_data))]
         return items
         
@@ -645,22 +752,22 @@ class Route:
         return route
 
     def save(self):
-        all_data = _load_data(Route.FILE_PATH); updated = False
+        all_data = _loadData(Route.FILE_PATH); updated = False
         for i, item_data in enumerate(all_data):
             if item_data.get('routeID') == self.routeID: all_data[i] = self.to_dict(); updated = True; break
         if not updated: all_data.append(self.to_dict())
-        _save_data(Route.FILE_PATH, all_data)
+        _saveData(Route.FILE_PATH, all_data)
 
     @classmethod
     def find_by_id(cls, item_id):
-        all_data = _load_data(Route.FILE_PATH)
+        all_data = _loadData(Route.FILE_PATH)
         for item_data in all_data:
             if item_data.get('routeID') == item_id: return cls.from_dict(item_data)
         return None
 
     @classmethod
     def get_all(cls):
-        all_data = _load_data(Route.FILE_PATH)
+        all_data = _loadData(Route.FILE_PATH)
         items = []; [items.append(obj) for item_data in all_data if (obj := cls.from_dict(item_data))]
         return items
         
@@ -693,16 +800,16 @@ class Feedback:
         fb.responseIDs=data.get('responseIDs',[])
         return fb
     def save(self): 
-        all_data=_load_data(Feedback.FILE_PATH);upd=False
+        all_data=_loadData(Feedback.FILE_PATH);upd=False
         for i,d in enumerate(all_data):
             if d.get('feedbackID')==self.feedbackID: all_data[i]=self.to_dict(); upd=True; break
         if not upd: all_data.append(self.to_dict())
-        _save_data(Feedback.FILE_PATH,all_data)
+        _saveData(Feedback.FILE_PATH,all_data)
     @classmethod
-    def find_by_id(cls,fid): return next((cls.from_dict(d) for d in _load_data(Feedback.FILE_PATH) if d.get('feedbackID')==fid),None)
+    def find_by_id(cls,fid): return next((cls.from_dict(d) for d in _loadData(Feedback.FILE_PATH) if d.get('feedbackID')==fid),None)
     @classmethod
     def get_all(cls,status_filter=None): 
-        feedbacks=[cls.from_dict(d) for d in _load_data(Feedback.FILE_PATH) if d]
+        feedbacks=[cls.from_dict(d) for d in _loadData(Feedback.FILE_PATH) if d]
         valid_feedbacks = [fb for fb in feedbacks if fb] # Filter out None objects
         if status_filter:
             return [fb for fb in valid_feedbacks if fb.status==status_filter]
@@ -727,16 +834,16 @@ class Response:
         else: resp.responseDatetime=datetime.now()
         return resp
     def save(self): 
-        all_data=_load_data(Response.FILE_PATH);upd=False
+        all_data=_loadData(Response.FILE_PATH);upd=False
         for i,d in enumerate(all_data):
             if d.get('responseID')==self.responseID: all_data[i]=self.to_dict(); upd=True; break
         if not upd: all_data.append(self.to_dict())
-        _save_data(Response.FILE_PATH,all_data)
+        _saveData(Response.FILE_PATH,all_data)
     @classmethod
-    def find_by_id(cls,rid): return next((cls.from_dict(d) for d in _load_data(Response.FILE_PATH) if d.get('responseID')==rid),None)
+    def find_by_id(cls,rid): return next((cls.from_dict(d) for d in _loadData(Response.FILE_PATH) if d.get('responseID')==rid),None)
     @classmethod
     def find_by_feedbackID(cls,fid): 
-        all_data = _load_data(Response.FILE_PATH)
+        all_data = _loadData(Response.FILE_PATH)
         responses = []
         for item_data in all_data:
             if item_data.get('feedbackID') == fid:
@@ -763,12 +870,12 @@ class Notification:
         else: notif.sent_datetime=datetime.now()
         return notif
     def save(self): 
-        all_data=_load_data(Notification.FILE_PATH)
+        all_data=_loadData(Notification.FILE_PATH)
         all_data.append(self.to_dict()) # Notifications are usually just appended
-        _save_data(Notification.FILE_PATH,all_data)
+        _saveData(Notification.FILE_PATH,all_data)
     @classmethod
     def find_by_recipient_id(cls,uid,unread_only=False): 
-        notifications_data = _load_data(Notification.FILE_PATH)
+        notifications_data = _loadData(Notification.FILE_PATH)
         notifications = []
         for item_data in notifications_data:
             if item_data.get('recipientuserID') == uid:
