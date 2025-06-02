@@ -1,8 +1,8 @@
 [
     {
         "feedbackID": "fb-uuid-001",
-        "submitter_userID": "mock_user_001",
-        "feedback_content": "The bus was 15 minutes late for trip TRP001. Very inconvenient.",
+        "submitterUserID": "mock_user_001",
+        "feedbackContent": "The bus was 15 minutes late for trip TRP001. Very inconvenient.",
         "rating": 2,
         "relatedtripID": "TRP001",
         "status": "Responded",
@@ -13,8 +13,8 @@
     },
     {
         "feedbackID": "fb-uuid-002",
-        "submitter_userID": "another_userID_example",
-        "feedback_content": "The online booking system is very easy to use! Great job!",
+        "submitterUserID": "another_userID_example",
+        "feedbackContent": "The online booking system is very easy to use! Great job!",
         "rating": 5,
         "relatedtripID": null,
         "status": "Responded",
@@ -25,8 +25,8 @@
     },
     {
         "feedbackID": "fb-uuid-003",
-        "submitter_userID": "mock_user_001",
-        "feedback_content": "Could you please add a route to the new shopping mall?",
+        "submitterUserID": "mock_user_001",
+        "feedbackContent": "Could you please add a route to the new shopping mall?",
         "rating": null,
         "relatedtripID": null,
         "status": "Responded",

@@ -2,7 +2,7 @@
 
 {% block content %}
     <h2>Standalone Refund Demonstration</h2>
-    <p>This page lists sample orders for user: <strong>{{ mock_userID }}</strong>. You can attempt to refund "Completed" orders.</p>
+    <p>This page lists sample orders for user: <strong>{{ mockUserID }}</strong>. You can attempt to refund "Completed" orders.</p>
     <p><em>Ensure you have sample "Completed" orders, with associated tickets and payments, for this user in your JSON data files.</em></p>
 
 
@@ -25,7 +25,7 @@
                     {% else %}
                         Trip data missing for this order. <br>
                     {% endif %}
-                    Tickets: {{ item.order.num_tickets }} | Total Paid: RM {{ "%.2f"|format(item.order.totalAmount) }} <br>
+                    Tickets: {{ item.order.numTickets }} | Total Paid: RM {{ "%.2f"|format(item.order.totalAmount) }} <br>
                     {# CORRECTED SPAN BELOW #}
                     <strong>Current Order Status: 
                         <span class="
@@ -43,7 +43,7 @@
                 </p>
                 
                 {% if item.order.status == "Completed" %}
-                    <form method="POST" action="{{ url_for('request_refund_standalone_route') }}" style="display: inline;">
+                    <form method="POST" action="{{ url_for('requestRefundStandaloneRoute') }}" style="display: inline;">
                         <input type="hidden" name="orderID_to_refund" value="{{ item.order.orderID }}">
                         <button type="submit" class="btn btn-warning btn-small">Attempt Refund for this Order</button>
                     </form>
@@ -55,7 +55,7 @@
             </div>
         {% endfor %}
     {% else %}
-        <p>No sample orders found for user '{{ mock_userID }}'.</p>
+        <p>No sample orders found for user '{{ mockUserID }}'.</p>
         <p>Please create sample data in <code>orders.json</code>, <code>tickets.json</code>, and <code>payments.json</code> for this user.</p>
         <p>Example <code>orders.json</code> entry for user 'mock_user_001':</p>
         <pre style="background-color:#eee; padding:5px; border:1px solid #ddd; font-size:0.9em;">
@@ -64,7 +64,7 @@
         "orderID": "sample-order-for-refund-001",
         "userID": "mock_user_001",
         "tripID": "TRP001", 
-        "num_tickets": 1,
+        "numTickets": 1,
         "totalAmount": 15.00,
         "orderDatetime": "2025-07-01T10:00:00.000000",
         "status": "Completed"

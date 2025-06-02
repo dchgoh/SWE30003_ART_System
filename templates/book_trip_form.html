@@ -22,7 +22,7 @@
         {# Conditionally show the form or a success message #}
         {% if not booking_successful %}
             {% if trip.availableSeats > 0 %}
-                <form method="POST" action="{{ url_for('book_trip_route', tripID=trip.tripID) }}">
+                <form method="POST" action="{{ url_for('bookTripRoute', tripID=trip.tripID) }}">
                     <br>
                     <p>Click below to confirm your booking (payment will be simulated).</p>
                     <div>
@@ -40,5 +40,5 @@
         <p>Trip details could not be loaded. Please try searching again.</p>
     {% endif %}
 
-    <p style="margin-top: 20px;"><a href="{{ url_for('search_trips_route') }}">Back to Search Results</a></p>
+    <p style="margin-top: 20px;"><a href="{{ url_for('searchTripsRoute') }}">Back to Search Results</a></p>
 {% endblock %}

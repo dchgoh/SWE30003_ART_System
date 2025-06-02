@@ -3,7 +3,7 @@
         "orderID": "a82831cb-b5ca-4666-968e-d26c2829c87b",
         "userID": "mock_user_001",
         "tripID": "TRP001",
-        "num_tickets": 1,
+        "numTickets": 1,
         "totalAmount": 15.0,
         "orderDatetime": "2025-05-20T15:39:10.737584",
         "status": "Refunded"
@@ -12,7 +12,7 @@
         "orderID": "7e1bc846-846f-43f0-987b-3549ea5b6f55",
         "userID": "mock_user_001",
         "tripID": "TRP001",
-        "num_tickets": 1,
+        "numTickets": 1,
         "totalAmount": 15.0,
         "orderDatetime": "2025-05-23T10:43:11.984855",
         "status": "Refunded"
@@ -21,7 +21,7 @@
         "orderID": "a0b57ffc-1104-44c3-950d-a35c59876399",
         "userID": "mock_user_001",
         "tripID": "TRP001",
-        "num_tickets": 1,
+        "numTickets": 1,
         "totalAmount": 15.0,
         "orderDatetime": "2025-06-02T01:29:21.667537",
         "status": "Refunded"
@@ -30,7 +30,7 @@
         "orderID": "a218931e-a3c3-4c85-a01a-aeca2d8d67b4",
         "userID": "mock_user_001",
         "tripID": "TRP001",
-        "num_tickets": 1,
+        "numTickets": 1,
         "totalAmount": 15.0,
         "orderDatetime": "2025-06-02T22:32:58.109213",
         "status": "Refunded"
@@ -39,7 +39,7 @@
         "orderID": "fa910e87-a9b6-4306-9db9-3fbb1abf99b6",
         "userID": "mock_user_001",
         "tripID": "TRP001",
-        "num_tickets": 1,
+        "numTickets": 1,
         "totalAmount": 15.0,
         "orderDatetime": "2025-06-02T22:33:56.505876",
         "status": "Refunded"
@@ -48,7 +48,7 @@
         "orderID": "6dd928f1-ddaf-45cd-9932-598620296779",
         "userID": "mock_user_001",
         "tripID": "TRP001",
-        "num_tickets": 1,
+        "numTickets": 1,
         "totalAmount": 15.0,
         "orderDatetime": "2025-06-02T22:57:23.237669",
         "status": "Refunded"

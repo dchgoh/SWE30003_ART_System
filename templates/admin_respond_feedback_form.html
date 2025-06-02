@@ -9,18 +9,18 @@
     {% if messages %}{% for cat, msg in messages %}<div class="flash-message {{cat}}">{{msg}}</div>{% endfor %}{% endif %}
 {% endwith %}
 
-<p class="back-link"><a href="{{ url_for('admin_manage_feedbacks_route') }}"><i class="fas fa-arrow-left"></i> Back to All Feedbacks</a></p>
+<p class="back-link"><a href="{{ url_for('adminManageFeedbacksRoute') }}"><i class="fas fa-arrow-left"></i> Back to All Feedbacks</a></p>
 
 {% if feedback %}
     <div class="feedback-details-card" style="background-color: #f9f9f9; border: 1px solid #eee; padding: 20px; border-radius: 5px; margin-bottom: 25px;">
         <h4>Feedback Details (ID: {{ feedback.feedbackID }})</h4>
-        <p><strong>Submitted by:</strong> {{ submitter_name }} (User ID: {{ feedback.submitter_userID }})</p>
+        <p><strong>Submitted by:</strong> {{ submitter_name }} (User ID: {{ feedback.submitterUserID }})</p>
         <p><strong>Date Submitted:</strong> {{ feedback.submissionDatetime.strftime('%Y-%m-%d %H:%M') }}</p>
         <p><strong>Current Status:</strong> <span class="feedback-status status-{{ feedback.status|lower }}">{{ feedback.status }}</span></p>
         {% if feedback.rating %}<p><strong>Rating:</strong> {{ feedback.rating }} / 5</p>{% endif %}
         {% if feedback.relatedtripID %}<p><strong>Related Trip ID:</strong> {{ feedback.relatedtripID }}</p>{% endif %}
         <p><strong>Feedback Content:</strong></p>
-        <pre style="background-color: #fff; border: 1px dashed #ccc; padding: 10px; white-space: pre-wrap; word-wrap: break-word;">{{ feedback.feedback_content }}</pre>
+        <pre style="background-color: #fff; border: 1px dashed #ccc; padding: 10px; white-space: pre-wrap; word-wrap: break-word;">{{ feedback.feedbackContent }}</pre>
     </div>
 
     {% if existing_responses %}
@@ -28,7 +28,7 @@
         <h4>Previous Responses:</h4>
         {% for response in existing_responses|sort(attribute='responseDatetime', reverse=True) %}
             <div class="response-item" style="border: 1px solid #e0e0e0; padding:10px; margin-bottom:10px; border-radius:4px; background-color: #f0f0f0;">
-                <p><strong>By Admin:</strong> {{ response.responder_adminID }} on {{ response.responseDatetime.strftime('%Y-%m-%d %H:%M') }}</p>
+                <p><strong>By Admin:</strong> {{ response.responderAdminID }} on {{ response.responseDatetime.strftime('%Y-%m-%d %H:%M') }}</p>
                 <pre style="background-color: #fff; padding: 8px; white-space: pre-wrap; word-wrap: break-word;">{{ response.responseContent }}</pre>
             </div>
         {% endfor %}
@@ -36,7 +36,7 @@
     {% endif %}
 
     {% if feedback.status != 'Closed' and feedback.status != 'Responded' %} {# Or adjust based on your workflow #}
-    <form method="POST" action="{{ url_for('admin_respond_to_feedback_route', feedbackID=feedback.feedbackID) }}">
+    <form method="POST" action="{{ url_for('adminRespondToFeedbackRoute', feedbackID=feedback.feedbackID) }}">
         <fieldset>
             <legend>Your Response</legend>
             <div>

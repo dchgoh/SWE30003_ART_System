@@ -278,7 +278,7 @@ class Trip:
         self.price = price
         self.availableSeats = int(availableSeats) # Ensure it's an int
 
-    def to_dict(self):
+    def toDict(self):
         return {
             'tripID': self.tripID, 
             'origin': self.origin, 
@@ -289,7 +289,7 @@ class Trip:
         }
 
     @classmethod
-    def from_dict(cls, data):
+    def fromDict(cls, data):
         if not isinstance(data, dict) or not all(k in data for k in ['tripID','origin','destination','departureTime','price','availableSeats']):
             print(f"Warning: Trip data missing critical fields or not a dict: {data}")
             return None
@@ -312,36 +312,36 @@ class Trip:
         updated = False
         for i, item_data in enumerate(all_data):
             if item_data.get('tripID') == self.tripID:
-                all_data[i] = self.to_dict()
+                all_data[i] = self.toDict()
                 updated = True
                 break
         if not updated:
-            all_data.append(self.to_dict())
+            all_data.append(self.toDict())
         _saveData(Trip.FILE_PATH, all_data)
 
     @classmethod
-    def find_by_id(cls, item_id):
+    def findByID(cls, item_id):
         all_data = _loadData(Trip.FILE_PATH)
         for item_data in all_data:
             if item_data.get('tripID') == item_id:
-                return cls.from_dict(item_data)
+                return cls.fromDict(item_data)
         return None
 
     @classmethod
-    def get_all(cls):
+    def getAll(cls):
         all_data = _loadData(Trip.FILE_PATH)
         items = []
         for item_data in all_data:
-            item_obj = cls.from_dict(item_data)
+            item_obj = cls.fromDict(item_data)
             if item_obj: items.append(item_obj)
         return items
         
     @classmethod
     def search(cls, origin=None, destination=None, date_str=None):
-        all_trips = cls.get_all()
+        all_trips = cls.getAll()
         filtered_trips = []
         for trip in all_trips:
-            # Ensure trip is not None (could happen if from_dict failed for an entry)
+            # Ensure trip is not None (could happen if fromDict failed for an entry)
             if not trip: 
                 continue 
             match = True
@@ -352,7 +352,7 @@ class Trip:
                 filtered_trips.append(trip)
         return filtered_trips
         
-    def update_seats(self, num_seats, operation="book"):
+    def updateSeats(self, num_seats, operation="book"):
         if operation == "book":
             if self.availableSeats >= num_seats:
                 self.availableSeats -= num_seats
@@ -373,14 +373,14 @@ class Payment:
         self.amount = float(amount)
         self.method = method
         self.status = status
-        self.payment_datetime = datetime.now()
+        self.paymentDatetime = datetime.now()
 
-    def to_dict(self):
+    def toDict(self):
         return {'paymentID':self.paymentID, 'orderID':self.orderID, 'amount':self.amount, 
-                'method':self.method, 'status':self.status, 'payment_datetime':self.payment_datetime.isoformat()}
+                'method':self.method, 'status':self.status, 'paymentDatetime':self.paymentDatetime.isoformat()}
 
     @classmethod
-    def from_dict(cls, data):
+    def fromDict(cls, data):
         if not isinstance(data, dict) or not all(k in data for k in ['orderID','amount','paymentID']):
             print(f"Warning: Payment data missing critical fields or not a dict: {data}")
             return None
@@ -396,48 +396,48 @@ class Payment:
             print(f"Error converting Payment data: {e}. Data: {data}")
             return None
 
-        dt_str = data.get('payment_datetime')
+        dt_str = data.get('paymentDatetime')
         if dt_str:
             try:
-                payment.payment_datetime = datetime.fromisoformat(dt_str)
+                payment.paymentDatetime = datetime.fromisoformat(dt_str)
             except ValueError:
-                print(f"Warning: Invalid payment_datetime format for {payment.paymentID}. Using current time.")
-                payment.payment_datetime = datetime.now() 
+                print(f"Warning: Invalid paymentDatetime format for {payment.paymentID}. Using current time.")
+                payment.paymentDatetime = datetime.now() 
         return payment
 
     def save(self):
         all_data = _loadData(Payment.FILE_PATH); updated = False
         for i, item_data in enumerate(all_data):
-            if item_data.get('paymentID') == self.paymentID: all_data[i] = self.to_dict(); updated = True; break
-        if not updated: all_data.append(self.to_dict())
+            if item_data.get('paymentID') == self.paymentID: all_data[i] = self.toDict(); updated = True; break
+        if not updated: all_data.append(self.toDict())
         _saveData(Payment.FILE_PATH, all_data)
 
     @classmethod
-    def find_by_id(cls, item_id):
+    def findByID(cls, item_id):
         all_data = _loadData(Payment.FILE_PATH)
         for item_data in all_data:
-            if item_data.get('paymentID') == item_id: return cls.from_dict(item_data)
+            if item_data.get('paymentID') == item_id: return cls.fromDict(item_data)
         return None
 
     @classmethod
-    def find_by_orderID(cls, orderID_to_find):
+    def findByOrderID(cls, orderID_to_find):
         all_data = _loadData(Payment.FILE_PATH)
         for item_data in all_data:
-            if item_data.get('orderID') == orderID_to_find: return cls.from_dict(item_data)
+            if item_data.get('orderID') == orderID_to_find: return cls.fromDict(item_data)
         return None
 
 
 # --- Ticket Model ---
 class Ticket:
     FILE_PATH = TICKET_DATA_FILE
-    def __init__(self, userID, tripID, orderID, paymentID, seatNumber=None, issue_datetime=None, ticketID=None, status="Active"):
+    def __init__(self, userID, tripID, orderID, paymentID, seatNumber=None, issueDatetime=None, ticketID=None, status="Active"):
         self.ticketID = ticketID if ticketID else str(uuid.uuid4())
         self.userID = userID
         self.tripID = tripID
         self.orderID = orderID
         self.paymentID = paymentID
         self.seatNumber = seatNumber if seatNumber else "Any Available"
-        self.issue_datetime = issue_datetime if issue_datetime else datetime.now()
+        self.issueDatetime = issueDatetime if issueDatetime else datetime.now()
         self.status = status
 
     def void(self):
@@ -446,13 +446,13 @@ class Ticket:
             return True
         return False
 
-    def to_dict(self):
+    def toDict(self):
         return {'ticketID':self.ticketID,'userID':self.userID,'tripID':self.tripID,
                 'orderID':self.orderID,'paymentID':self.paymentID,'seatNumber':self.seatNumber,
-                'issue_datetime':self.issue_datetime.isoformat(),'status':self.status}
+                'issueDatetime':self.issueDatetime.isoformat(),'status':self.status}
 
     @classmethod
-    def from_dict(cls, data):
+    def fromDict(cls, data):
         if not isinstance(data, dict) or not all(k in data for k in ['userID','tripID','orderID','paymentID','ticketID']):
             print(f"Warning: Ticket data missing critical fields or not a dict: {data}")
             return None
@@ -462,38 +462,38 @@ class Ticket:
             paymentID=data.get('paymentID'), seatNumber=data.get('seatNumber'),
             ticketID=data.get('ticketID'), status=data.get('status', "Active")
         )
-        dt_str = data.get('issue_datetime')
+        dt_str = data.get('issueDatetime')
         if dt_str:
-            try: ticket.issue_datetime = datetime.fromisoformat(dt_str)
-            except ValueError: ticket.issue_datetime = datetime.now()
+            try: ticket.issueDatetime = datetime.fromisoformat(dt_str)
+            except ValueError: ticket.issueDatetime = datetime.now()
         return ticket
 
     def save(self):
         all_data = _loadData(Ticket.FILE_PATH); updated = False
         for i, item_data in enumerate(all_data):
-            if item_data.get('ticketID') == self.ticketID: all_data[i] = self.to_dict(); updated = True; break
-        if not updated: all_data.append(self.to_dict())
+            if item_data.get('ticketID') == self.ticketID: all_data[i] = self.toDict(); updated = True; break
+        if not updated: all_data.append(self.toDict())
         _saveData(Ticket.FILE_PATH, all_data)
 
     @classmethod
-    def find_by_id(cls, item_id):
+    def findByID(cls, item_id):
         all_data = _loadData(Ticket.FILE_PATH)
         for item_data in all_data:
-            if item_data.get('ticketID') == item_id: return cls.from_dict(item_data)
+            if item_data.get('ticketID') == item_id: return cls.fromDict(item_data)
         return None
         
     @classmethod
-    def find_by_orderID(cls, orderID_to_find):
+    def findByOrderID(cls, orderID_to_find):
         all_data = _loadData(Ticket.FILE_PATH)
         tickets = []
         for item_data in all_data:
             if item_data.get('orderID') == orderID_to_find:
-                ticket_obj = cls.from_dict(item_data)
+                ticket_obj = cls.fromDict(item_data)
                 if ticket_obj: tickets.append(ticket_obj)
         return tickets
         
     @classmethod
-    def delete_by_orderID(cls, orderID_to_delete):
+    def deleteByOrderID(cls, orderID_to_delete):
         all_data = _loadData(Ticket.FILE_PATH)
         remaining_items = [item for item in all_data if item.get('orderID') != orderID_to_delete]
         if len(remaining_items) < len(all_data): # Check if any were actually removed
@@ -505,29 +505,29 @@ class Ticket:
 # --- Order Model ---
 class Order:
     FILE_PATH = ORDER_DATA_FILE
-    def __init__(self, userID, tripID, num_tickets, totalAmount, orderID=None, status="PendingPayment"):
+    def __init__(self, userID, tripID, numTickets, totalAmount, orderID=None, status="PendingPayment"):
         self.orderID = orderID if orderID else str(uuid.uuid4())
         self.userID = userID
         self.tripID = tripID
-        self.num_tickets = int(num_tickets)
+        self.numTickets = int(numTickets)
         self.totalAmount = float(totalAmount)
         self.orderDatetime = datetime.now()
         self.status = status
 
-    def to_dict(self):
+    def toDict(self):
         return {'orderID':self.orderID,'userID':self.userID,'tripID':self.tripID,
-                'num_tickets':self.num_tickets,'totalAmount':self.totalAmount,
+                'numTickets':self.numTickets,'totalAmount':self.totalAmount,
                 'orderDatetime':self.orderDatetime.isoformat(),'status':self.status}
 
     @classmethod
-    def from_dict(cls, data):
-        if not isinstance(data, dict) or not all(k in data for k in ['userID','tripID','num_tickets','totalAmount','orderID']):
+    def fromDict(cls, data):
+        if not isinstance(data, dict) or not all(k in data for k in ['userID','tripID','numTickets','totalAmount','orderID']):
             print(f"Warning: Order data missing critical fields or not a dict: {data}")
             return None
         try:
             order = cls(
                 userID=data.get('userID'), tripID=data.get('tripID'),
-                num_tickets=int(data.get('num_tickets')), totalAmount=float(data.get('totalAmount')),
+                numTickets=int(data.get('numTickets')), totalAmount=float(data.get('totalAmount')),
                 orderID=data.get('orderID'), status=data.get('status', 'PendingPayment')
             )
         except (ValueError, TypeError) as e:
@@ -543,15 +543,15 @@ class Order:
     def save(self):
         all_data = _loadData(Order.FILE_PATH); updated = False
         for i, item_data in enumerate(all_data):
-            if item_data.get('orderID') == self.orderID: all_data[i] = self.to_dict(); updated = True; break
-        if not updated: all_data.append(self.to_dict())
+            if item_data.get('orderID') == self.orderID: all_data[i] = self.toDict(); updated = True; break
+        if not updated: all_data.append(self.toDict())
         _saveData(Order.FILE_PATH, all_data)
 
     @classmethod
-    def find_by_id(cls, item_id):
+    def findByID(cls, item_id):
         all_data = _loadData(Order.FILE_PATH)
         for item_data in all_data:
-            if item_data.get('orderID') == item_id: return cls.from_dict(item_data)
+            if item_data.get('orderID') == item_id: return cls.fromDict(item_data)
         return None
 
     @classmethod
@@ -560,7 +560,7 @@ class Order:
         orders = []
         for item_data in all_data:
             if item_data.get('userID') == userID_to_find:
-                order_obj = cls.from_dict(item_data)
+                order_obj = cls.fromDict(item_data)
                 if order_obj: orders.append(order_obj)
         return orders
 
@@ -571,20 +571,20 @@ class Refund:
     def __init__(self, paymentID, orderID, ticketID, refundAmount, refundReason="User requested", refundID=None, status="Pending"):
         self.refundID = refundID if refundID else str(uuid.uuid4())
         self.paymentID=paymentID; self.orderID=orderID; self.ticketID=ticketID; self.refundAmount=float(refundAmount)
-        self.refundReason=refundReason; self.status=status; self.request_datetime=datetime.now(); self.processed_datetime=None
+        self.refundReason=refundReason; self.status=status; self.requestDatetime=datetime.now(); self.processedDatetime=None
 
-    def update_status(self, new_status):
+    def updateStatus(self, new_status):
         self.status = new_status
-        if self.status in ["Processed", "Failed"]: self.processed_datetime = datetime.now()
+        if self.status in ["Processed", "Failed"]: self.processedDatetime = datetime.now()
 
-    def to_dict(self):
+    def toDict(self):
         return {'refundID':self.refundID,'paymentID':self.paymentID,'orderID':self.orderID,
                 'ticketID':self.ticketID,'refundAmount':self.refundAmount,'refundReason':self.refundReason,
-                'status':self.status,'request_datetime':self.request_datetime.isoformat(),
-                'processed_datetime':self.processed_datetime.isoformat() if self.processed_datetime else None}
+                'status':self.status,'requestDatetime':self.requestDatetime.isoformat(),
+                'processedDatetime':self.processedDatetime.isoformat() if self.processedDatetime else None}
 
     @classmethod
-    def from_dict(cls, data):
+    def fromDict(cls, data):
         if not isinstance(data, dict) or not all(k in data for k in ['paymentID','orderID','ticketID','refundAmount','refundID']):
             print(f"Warning: Refund data missing critical fields or not a dict: {data}")
             return None
@@ -598,22 +598,22 @@ class Refund:
             print(f"Error converting Refund data: {e}. Data: {data}")
             return None
 
-        req_dt_str = data.get('request_datetime')
+        req_dt_str = data.get('requestDatetime')
         if req_dt_str:
-            try: refund.request_datetime = datetime.fromisoformat(req_dt_str)
-            except ValueError: refund.request_datetime = datetime.now()
+            try: refund.requestDatetime = datetime.fromisoformat(req_dt_str)
+            except ValueError: refund.requestDatetime = datetime.now()
         
-        proc_dt_str = data.get('processed_datetime')
+        proc_dt_str = data.get('processedDatetime')
         if proc_dt_str:
-            try: refund.processed_datetime = datetime.fromisoformat(proc_dt_str)
-            except ValueError: refund.processed_datetime = None # If invalid, keep it None
+            try: refund.processedDatetime = datetime.fromisoformat(proc_dt_str)
+            except ValueError: refund.processedDatetime = None # If invalid, keep it None
         return refund
         
     def save(self):
         all_data = _loadData(Refund.FILE_PATH); updated = False
         for i, item_data in enumerate(all_data):
-            if item_data.get('refundID') == self.refundID: all_data[i] = self.to_dict(); updated = True; break
-        if not updated: all_data.append(self.to_dict())
+            if item_data.get('refundID') == self.refundID: all_data[i] = self.toDict(); updated = True; break
+        if not updated: all_data.append(self.toDict())
         _saveData(Refund.FILE_PATH, all_data)
 
 
@@ -632,12 +632,12 @@ class Location:
         if postcode is not None: self.postcode = postcode
         return True
 
-    def to_dict(self):
+    def toDict(self):
         return {'locationID':self.locationID,'latitude':self.latitude,'longitude':self.longitude,
                 'addressLine1':self.addressLine1,'city':self.city,'postcode':self.postcode}
 
     @classmethod
-    def from_dict(cls,data):
+    def fromDict(cls,data):
         if not isinstance(data,dict) or not all(k in data for k in ['latitude','longitude','addressLine1','city','postcode']):
             print(f"Warning: Location data missing critical fields or not a dict: {data}")
             return None
@@ -654,21 +654,21 @@ class Location:
     def save(self):
         all_data = _loadData(Location.FILE_PATH); updated = False
         for i, item_data in enumerate(all_data):
-            if item_data.get('locationID') == self.locationID: all_data[i] = self.to_dict(); updated = True; break
-        if not updated: all_data.append(self.to_dict())
+            if item_data.get('locationID') == self.locationID: all_data[i] = self.toDict(); updated = True; break
+        if not updated: all_data.append(self.toDict())
         _saveData(Location.FILE_PATH, all_data)
 
     @classmethod
-    def find_by_id(cls, item_id):
+    def findByID(cls, item_id):
         all_data = _loadData(Location.FILE_PATH)
         for item_data in all_data:
-            if item_data.get('locationID') == item_id: return cls.from_dict(item_data)
+            if item_data.get('locationID') == item_id: return cls.fromDict(item_data)
         return None
 
     @classmethod
-    def get_all(cls):
+    def getAll(cls):
         all_data = _loadData(Location.FILE_PATH)
-        items = []; [items.append(obj) for item_data in all_data if (obj := cls.from_dict(item_data))]
+        items = []; [items.append(obj) for item_data in all_data if (obj := cls.fromDict(item_data))]
         return items
 
 
@@ -681,11 +681,11 @@ class Stop:
         self.locationID = locationID
         self.stopCode = stopCode if stopCode else self.stopID[:6].upper()
 
-    def to_dict(self):
+    def toDict(self):
         return {'stopID':self.stopID,'stopName':self.stopName,'locationID':self.locationID,'stopCode':self.stopCode}
 
     @classmethod
-    def from_dict(cls,data):
+    def fromDict(cls,data):
         if not isinstance(data,dict) or not all(k in data for k in ['stopName','locationID']):
             print(f"Warning: Stop data missing critical fields or not a dict: {data}")
             return None
@@ -694,8 +694,8 @@ class Stop:
             stopID=data.get('stopID'), stopCode=data.get('stopCode')
         )
 
-    def update_location_details(self, new_latitude, new_longitude, new_address, new_city, new_postcode):
-        location = Location.find_by_id(self.locationID)
+    def updateLocationDetails(self, new_latitude, new_longitude, new_address, new_city, new_postcode):
+        location = Location.findByID(self.locationID)
         if location:
             location.set_details(new_latitude, new_longitude, new_address, new_city, new_postcode)
             location.save()
@@ -705,25 +705,25 @@ class Stop:
     def save(self):
         all_data = _loadData(Stop.FILE_PATH); updated = False
         for i, item_data in enumerate(all_data):
-            if item_data.get('stopID') == self.stopID: all_data[i] = self.to_dict(); updated = True; break
-        if not updated: all_data.append(self.to_dict())
+            if item_data.get('stopID') == self.stopID: all_data[i] = self.toDict(); updated = True; break
+        if not updated: all_data.append(self.toDict())
         _saveData(Stop.FILE_PATH, all_data)
 
     @classmethod
-    def find_by_id(cls, item_id):
+    def findByID(cls, item_id):
         all_data = _loadData(Stop.FILE_PATH)
         for item_data in all_data:
-            if item_data.get('stopID') == item_id: return cls.from_dict(item_data)
+            if item_data.get('stopID') == item_id: return cls.fromDict(item_data)
         return None
 
     @classmethod
-    def get_all(cls):
+    def getAll(cls):
         all_data = _loadData(Stop.FILE_PATH)
-        items = []; [items.append(obj) for item_data in all_data if (obj := cls.from_dict(item_data))]
+        items = []; [items.append(obj) for item_data in all_data if (obj := cls.fromDict(item_data))]
         return items
         
     def get_location(self): 
-        return Location.find_by_id(self.locationID)
+        return Location.findByID(self.locationID)
 
 
 # --- Route Model ---
@@ -735,15 +735,15 @@ class Route:
         self.description = description
         self.stopIDs = stopIDs if stopIDs is not None else []
 
-    def add_stopID(self, stopID):
+    def addStopID(self, stopID):
         if stopID not in self.stopIDs: self.stopIDs.append(stopID); return True
         return False
-    def find_stopID(self, stopID_to_find): return stopID_to_find if stopID_to_find in self.stopIDs else None
-    def to_dict(self): 
+    def findStopID(self, stopID_to_find): return stopID_to_find if stopID_to_find in self.stopIDs else None
+    def toDict(self): 
         return {'routeID':self.routeID,'routeName':self.routeName,
                 'description':self.description,'stopIDs':self.stopIDs}
     @classmethod
-    def from_dict(cls,data):
+    def fromDict(cls,data):
         if not isinstance(data,dict) or not data.get('routeName') or not data.get('routeID'):
             print(f"Warning: Route data missing critical fields or not a dict: {data}")
             return None
@@ -754,27 +754,27 @@ class Route:
     def save(self):
         all_data = _loadData(Route.FILE_PATH); updated = False
         for i, item_data in enumerate(all_data):
-            if item_data.get('routeID') == self.routeID: all_data[i] = self.to_dict(); updated = True; break
-        if not updated: all_data.append(self.to_dict())
+            if item_data.get('routeID') == self.routeID: all_data[i] = self.toDict(); updated = True; break
+        if not updated: all_data.append(self.toDict())
         _saveData(Route.FILE_PATH, all_data)
 
     @classmethod
-    def find_by_id(cls, item_id):
+    def findByID(cls, item_id):
         all_data = _loadData(Route.FILE_PATH)
         for item_data in all_data:
-            if item_data.get('routeID') == item_id: return cls.from_dict(item_data)
+            if item_data.get('routeID') == item_id: return cls.fromDict(item_data)
         return None
 
     @classmethod
-    def get_all(cls):
+    def getAll(cls):
         all_data = _loadData(Route.FILE_PATH)
-        items = []; [items.append(obj) for item_data in all_data if (obj := cls.from_dict(item_data))]
+        items = []; [items.append(obj) for item_data in all_data if (obj := cls.fromDict(item_data))]
         return items
         
-    def get_stops_objects(self):
+    def getStopsObjects(self):
         stops = []
         for stopID in self.stopIDs:
-            stop_obj = Stop.find_by_id(stopID)
+            stop_obj = Stop.findByID(stopID)
             if stop_obj: stops.append(stop_obj)
         return stops
 
@@ -782,14 +782,14 @@ class Route:
 # --- Feedback Model ---
 class Feedback:
     FILE_PATH = FEEDBACK_DATA_FILE
-    def __init__(self, submitter_userID, feedback_content, rating=None, relatedtripID=None, feedbackID=None, status="New", submissionDatetime=None, responseIDs=None): # noqa
-        self.feedbackID=feedbackID or str(uuid.uuid4());self.submitter_userID=submitter_userID;self.feedback_content=feedback_content;self.rating=rating;self.relatedtripID=relatedtripID;self.status=status;self.submissionDatetime=submissionDatetime or datetime.now();self.responseIDs=responseIDs or [] # noqa
-    def update_status(self,new_status): self.status=new_status
-    def add_responseID(self,rid): (self.responseIDs.append(rid)) if rid not in self.responseIDs else None
-    def to_dict(self): return {'feedbackID':self.feedbackID,'submitter_userID':self.submitter_userID,'feedback_content':self.feedback_content,'rating':self.rating,'relatedtripID':self.relatedtripID,'status':self.status,'submissionDatetime':self.submissionDatetime.isoformat(),'responseIDs':self.responseIDs} # noqa
+    def __init__(self, submitterUserID, feedbackContent, rating=None, relatedtripID=None, feedbackID=None, status="New", submissionDatetime=None, responseIDs=None): # noqa
+        self.feedbackID=feedbackID or str(uuid.uuid4());self.submitterUserID=submitterUserID;self.feedbackContent=feedbackContent;self.rating=rating;self.relatedtripID=relatedtripID;self.status=status;self.submissionDatetime=submissionDatetime or datetime.now();self.responseIDs=responseIDs or [] # noqa
+    def updateStatus(self,new_status): self.status=new_status
+    def addResponseID(self,rid): (self.responseIDs.append(rid)) if rid not in self.responseIDs else None
+    def toDict(self): return {'feedbackID':self.feedbackID,'submitterUserID':self.submitterUserID,'feedbackContent':self.feedbackContent,'rating':self.rating,'relatedtripID':self.relatedtripID,'status':self.status,'submissionDatetime':self.submissionDatetime.isoformat(),'responseIDs':self.responseIDs} # noqa
     @classmethod
-    def from_dict(cls,data): 
-        if not isinstance(data,dict) or not all(k in data for k in ['submitter_userID','feedback_content']): return None
+    def fromDict(cls,data): 
+        if not isinstance(data,dict) or not all(k in data for k in ['submitterUserID','feedbackContent']): return None
         fb_items = {k:v for k,v in data.items() if k not in ['submissionDatetime','responseIDs']}
         fb = cls(**fb_items)
         dt_str=data.get('submissionDatetime')
@@ -802,29 +802,29 @@ class Feedback:
     def save(self): 
         all_data=_loadData(Feedback.FILE_PATH);upd=False
         for i,d in enumerate(all_data):
-            if d.get('feedbackID')==self.feedbackID: all_data[i]=self.to_dict(); upd=True; break
-        if not upd: all_data.append(self.to_dict())
+            if d.get('feedbackID')==self.feedbackID: all_data[i]=self.toDict(); upd=True; break
+        if not upd: all_data.append(self.toDict())
         _saveData(Feedback.FILE_PATH,all_data)
     @classmethod
-    def find_by_id(cls,fid): return next((cls.from_dict(d) for d in _loadData(Feedback.FILE_PATH) if d.get('feedbackID')==fid),None)
+    def findByID(cls,fid): return next((cls.fromDict(d) for d in _loadData(Feedback.FILE_PATH) if d.get('feedbackID')==fid),None)
     @classmethod
-    def get_all(cls,status_filter=None): 
-        feedbacks=[cls.from_dict(d) for d in _loadData(Feedback.FILE_PATH) if d]
+    def getAll(cls,status_filter=None): 
+        feedbacks=[cls.fromDict(d) for d in _loadData(Feedback.FILE_PATH) if d]
         valid_feedbacks = [fb for fb in feedbacks if fb] # Filter out None objects
         if status_filter:
             return [fb for fb in valid_feedbacks if fb.status==status_filter]
         return valid_feedbacks
-    def get_responses(self): return [Response.find_by_id(rid) for rid in self.responseIDs if Response.find_by_id(rid)]
+    def get_responses(self): return [Response.findByID(rid) for rid in self.responseIDs if Response.findByID(rid)]
 
 # --- Response Model ---
 class Response:
     FILE_PATH = RESPONSE_DATA_FILE
-    def __init__(self, feedbackID, responder_adminID, responseContent, responseID=None, responseDatetime=None):
-        self.responseID=responseID or str(uuid.uuid4());self.feedbackID=feedbackID;self.responder_adminID=responder_adminID;self.responseContent=responseContent;self.responseDatetime=responseDatetime or datetime.now() # noqa
-    def to_dict(self): return {'responseID':self.responseID,'feedbackID':self.feedbackID,'responder_adminID':self.responder_adminID,'responseContent':self.responseContent,'responseDatetime':self.responseDatetime.isoformat()} # noqa
+    def __init__(self, feedbackID, responderAdminID, responseContent, responseID=None, responseDatetime=None):
+        self.responseID=responseID or str(uuid.uuid4());self.feedbackID=feedbackID;self.responderAdminID=responderAdminID;self.responseContent=responseContent;self.responseDatetime=responseDatetime or datetime.now() # noqa
+    def toDict(self): return {'responseID':self.responseID,'feedbackID':self.feedbackID,'responderAdminID':self.responderAdminID,'responseContent':self.responseContent,'responseDatetime':self.responseDatetime.isoformat()} # noqa
     @classmethod
-    def from_dict(cls,data): 
-        if not isinstance(data,dict) or not all(k in data for k in ['feedbackID','responder_adminID','responseContent']): return None
+    def fromDict(cls,data): 
+        if not isinstance(data,dict) or not all(k in data for k in ['feedbackID','responderAdminID','responseContent']): return None
         resp_items = {k:v for k,v in data.items() if k!='responseDatetime'}
         resp=cls(**resp_items)
         dt_str=data.get('responseDatetime')
@@ -836,42 +836,42 @@ class Response:
     def save(self): 
         all_data=_loadData(Response.FILE_PATH);upd=False
         for i,d in enumerate(all_data):
-            if d.get('responseID')==self.responseID: all_data[i]=self.to_dict(); upd=True; break
-        if not upd: all_data.append(self.to_dict())
+            if d.get('responseID')==self.responseID: all_data[i]=self.toDict(); upd=True; break
+        if not upd: all_data.append(self.toDict())
         _saveData(Response.FILE_PATH,all_data)
     @classmethod
-    def find_by_id(cls,rid): return next((cls.from_dict(d) for d in _loadData(Response.FILE_PATH) if d.get('responseID')==rid),None)
+    def findByID(cls,rid): return next((cls.fromDict(d) for d in _loadData(Response.FILE_PATH) if d.get('responseID')==rid),None)
     @classmethod
     def find_by_feedbackID(cls,fid): 
         all_data = _loadData(Response.FILE_PATH)
         responses = []
         for item_data in all_data:
             if item_data.get('feedbackID') == fid:
-                resp_obj = cls.from_dict(item_data)
+                resp_obj = cls.fromDict(item_data)
                 if resp_obj: responses.append(resp_obj)
         return responses
 
 # --- Notification Model ---
 class Notification:
     FILE_PATH = NOTIFICATION_DATA_FILE
-    def __init__(self, recipientuserID, senderuserID, message_content, notificationType="General", notificationID=None, sent_datetime=None, read_status=False): # noqa
-        self.notificationID=notificationID or str(uuid.uuid4());self.recipientuserID=recipientuserID;self.senderuserID=senderuserID;self.message_content=message_content;self.notificationType=notificationType;self.sent_datetime=sent_datetime or datetime.now();self.read_status=read_status # noqa
-    def mark_as_read(self): self.read_status=True
-    def to_dict(self): return {'notificationID':self.notificationID,'recipientuserID':self.recipientuserID,'senderuserID':self.senderuserID,'message_content':self.message_content,'notificationType':self.notificationType,'sent_datetime':self.sent_datetime.isoformat(),'read_status':self.read_status} # noqa
+    def __init__(self, recipientuserID, senderuserID, messageContent, notificationType="General", notificationID=None, sentDatetime=None, readStatus=False): # noqa
+        self.notificationID=notificationID or str(uuid.uuid4());self.recipientuserID=recipientuserID;self.senderuserID=senderuserID;self.messageContent=messageContent;self.notificationType=notificationType;self.sentDatetime=sentDatetime or datetime.now();self.readStatus=readStatus # noqa
+    def mark_as_read(self): self.readStatus=True
+    def toDict(self): return {'notificationID':self.notificationID,'recipientuserID':self.recipientuserID,'senderuserID':self.senderuserID,'messageContent':self.messageContent,'notificationType':self.notificationType,'sentDatetime':self.sentDatetime.isoformat(),'readStatus':self.readStatus} # noqa
     @classmethod
-    def from_dict(cls,data): 
-        if not isinstance(data,dict) or not all(k in data for k in ['recipientuserID','message_content']): return None
-        notif_items = {k:v for k,v in data.items() if k!='sent_datetime'}
+    def fromDict(cls,data): 
+        if not isinstance(data,dict) or not all(k in data for k in ['recipientuserID','messageContent']): return None
+        notif_items = {k:v for k,v in data.items() if k!='sentDatetime'}
         notif=cls(**notif_items)
-        dt_str=data.get('sent_datetime')
+        dt_str=data.get('sentDatetime')
         if dt_str: 
-            try: notif.sent_datetime=datetime.fromisoformat(dt_str)
-            except ValueError: notif.sent_datetime=datetime.now()
-        else: notif.sent_datetime=datetime.now()
+            try: notif.sentDatetime=datetime.fromisoformat(dt_str)
+            except ValueError: notif.sentDatetime=datetime.now()
+        else: notif.sentDatetime=datetime.now()
         return notif
     def save(self): 
         all_data=_loadData(Notification.FILE_PATH)
-        all_data.append(self.to_dict()) # Notifications are usually just appended
+        all_data.append(self.toDict()) # Notifications are usually just appended
         _saveData(Notification.FILE_PATH,all_data)
     @classmethod
     def find_by_recipient_id(cls,uid,unread_only=False): 
@@ -879,9 +879,9 @@ class Notification:
         notifications = []
         for item_data in notifications_data:
             if item_data.get('recipientuserID') == uid:
-                notif_obj = cls.from_dict(item_data)
+                notif_obj = cls.fromDict(item_data)
                 if notif_obj: notifications.append(notif_obj)
         
         if unread_only:
-            return [n for n in notifications if not n.read_status]
+            return [n for n in notifications if not n.readStatus]
         return notifications

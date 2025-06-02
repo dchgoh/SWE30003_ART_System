@@ -7,8 +7,8 @@
         "refundAmount": 15.0,
         "refundReason": "User requested cancellation",
         "status": "Processed",
-        "request_datetime": "2025-05-20T15:58:21.493683",
-        "processed_datetime": "2025-05-20T15:58:21.493688"
+        "requestDatetime": "2025-05-20T15:58:21.493683",
+        "processedDatetime": "2025-05-20T15:58:21.493688"
     },
     {
         "refundID": "6d8bd641-e2c8-4a96-ab13-8b0acdcddefa",
@@ -18,8 +18,8 @@
         "refundAmount": 15.0,
         "refundReason": "User requested cancellation",
         "status": "Processed",
-        "request_datetime": "2025-05-20T19:42:25.301870",
-        "processed_datetime": "2025-05-20T19:42:25.301872"
+        "requestDatetime": "2025-05-20T19:42:25.301870",
+        "processedDatetime": "2025-05-20T19:42:25.301872"
     },
     {
         "refundID": "c4a60408-dec3-40dc-bdf7-c08d908dcb2e",
@@ -29,8 +29,8 @@
         "refundAmount": 15.0,
         "refundReason": "User requested cancellation",
         "status": "Processed",
-        "request_datetime": "2025-05-20T19:43:15.675342",
-        "processed_datetime": "2025-05-20T19:43:15.675344"
+        "requestDatetime": "2025-05-20T19:43:15.675342",
+        "processedDatetime": "2025-05-20T19:43:15.675344"
     },
     {
         "refundID": "08d9a94a-a3ee-46ba-98c8-3f5af87cf86d",
@@ -40,8 +40,8 @@
         "refundAmount": 60.0,
         "refundReason": "User requested cancellation",
         "status": "Processed",
-        "request_datetime": "2025-05-20T23:27:30.182999",
-        "processed_datetime": "2025-05-20T23:27:30.183005"
+        "requestDatetime": "2025-05-20T23:27:30.182999",
+        "processedDatetime": "2025-05-20T23:27:30.183005"
     },
     {
         "refundID": "52796c04-ce2b-44c5-905e-cea25ca86f2f",
@@ -51,8 +51,8 @@
         "refundAmount": 15.0,
         "refundReason": "User requested cancellation",
         "status": "Processed",
-        "request_datetime": "2025-05-23T11:19:08.411804",
-        "processed_datetime": "2025-05-23T11:19:08.411814"
+        "requestDatetime": "2025-05-23T11:19:08.411804",
+        "processedDatetime": "2025-05-23T11:19:08.411814"
     },
     {
         "refundID": "32ce9000-2142-4f16-8182-b5c466e18f65",
@@ -62,8 +62,8 @@
         "refundAmount": 15.0,
         "refundReason": "User requested",
         "status": "Processed",
-        "request_datetime": "2025-06-02T01:29:24.970977",
-        "processed_datetime": "2025-06-02T01:29:24.970987"
+        "requestDatetime": "2025-06-02T01:29:24.970977",
+        "processedDatetime": "2025-06-02T01:29:24.970987"
     },
     {
         "refundID": "54a4b309-1775-4cf8-bdaa-bea30e2a2e6e",
@@ -73,8 +73,8 @@
         "refundAmount": 15.0,
         "refundReason": "User requested",
         "status": "Processed",
-        "request_datetime": "2025-06-02T22:33:07.801351",
-        "processed_datetime": "2025-06-02T22:33:07.801354"
+        "requestDatetime": "2025-06-02T22:33:07.801351",
+        "processedDatetime": "2025-06-02T22:33:07.801354"
     },
     {
         "refundID": "a97ec9d6-5bc2-4349-ade4-ee55459deb23",
@@ -84,8 +84,8 @@
         "refundAmount": 15.0,
         "refundReason": "User requested",
         "status": "Processed",
-        "request_datetime": "2025-06-02T22:57:39.812153",
-        "processed_datetime": "2025-06-02T22:57:39.812157"
+        "requestDatetime": "2025-06-02T22:57:39.812153",
+        "processedDatetime": "2025-06-02T22:57:39.812157"
     },
     {
         "refundID": "8bf94d61-81c2-4976-8df3-4f2fd2ea8080",
@@ -95,7 +95,7 @@
         "refundAmount": 15.0,
         "refundReason": "User requested",
         "status": "Processed",
-        "request_datetime": "2025-06-02T22:57:41.651145",
-        "processed_datetime": "2025-06-02T22:57:41.651150"
+        "requestDatetime": "2025-06-02T22:57:41.651145",
+        "processedDatetime": "2025-06-02T22:57:41.651150"
     }
 ]

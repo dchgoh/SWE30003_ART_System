@@ -5,7 +5,7 @@ from models import User, Admin, Trip, Ticket, Order, Payment, Refund, Location, 
 app = Flask(__name__)
 app.secret_key = 'your_very_secret_dev_key_123!' 
 
-mock_userID = "mock_user_001" 
+mockUserID = "mock_user_001" 
 mock_adminID = "admin_user_001" # Assuming an admin user exists in users.json with this ID and isAdmin=True
 
 # --- Basic Routes ---
@@ -17,7 +17,7 @@ def home():
 # REGISTRATION ROUTE IS REMOVED
 
 @app.route('/search-trips', methods=['GET'])
-def search_trips_route():
+def searchTripsRoute():
     origin_query = request.args.get('origin', '').strip()
     destination_query = request.args.get('destination', '').strip()
     date_query = request.args.get('date', '').strip()
@@ -38,69 +38,69 @@ def search_trips_route():
                            search_performed=search_performed)
 
 @app.route('/book-trip/<tripID>', methods=['GET', 'POST'])
-def book_trip_route(tripID):
-    current_userID = mock_userID 
-    trip_to_book = Trip.find_by_id(tripID)
+def bookTripRoute(tripID):
+    currentUserID = mockUserID 
+    tripToBook = Trip.findByID(tripID)
 
-    if not trip_to_book:
-        flash("Trip not found.", "error"); return redirect(url_for('search_trips_route'))
+    if not tripToBook:
+        flash("Trip not found.", "error"); return redirect(url_for('searchTripsRoute'))
 
     if request.method == 'POST':
-        num_tickets_to_book = 1 # Simplified
-        if trip_to_book.availableSeats < num_tickets_to_book:
+        numTicketsToBook = 1 # Simplified
+        if tripToBook.availableSeats < numTicketsToBook:
             flash("Not enough available seats.", "error")
         else:
             # --- Booking Logic (moved from service, simplified) ---
-            order_totalAmount = trip_to_book.price * num_tickets_to_book
-            new_order = Order(userID=current_userID, tripID=tripID, 
-                              num_tickets=num_tickets_to_book, totalAmount=order_totalAmount, status="PendingPayment")
-            new_order.save() # Order saves itself
+            orderTotalAmount = tripToBook.price * numTicketsToBook
+            newOrder = Order(userID=currentUserID, tripID=tripID, 
+                              numTickets=numTicketsToBook, totalAmount=orderTotalAmount, status="PendingPayment")
+            newOrder.save() # Order saves itself
 
             mock_payment_successful = True # Simulate payment
             if mock_payment_successful:
-                new_payment = Payment(orderID=new_order.orderID, amount=new_order.totalAmount, status="Completed")
-                new_payment.save() # Payment saves itself
-                new_order.status = "Completed"
-                new_order.save() # Update and save order
+                newPayment = Payment(orderID=newOrder.orderID, amount=newOrder.totalAmount, status="Completed")
+                newPayment.save() # Payment saves itself
+                newOrder.status = "Completed"
+                newOrder.save() # Update and save order
 
                 # Update trip seats
-                trip_to_book.update_seats(num_tickets_to_book, operation="book")
-                trip_to_book.save() # Trip saves itself
+                tripToBook.updateSeats(numTicketsToBook, operation="book")
+                tripToBook.save() # Trip saves itself
 
                 # Create tickets
-                created_tickets_info = []
-                for _ in range(num_tickets_to_book):
-                    new_ticket = Ticket(userID=current_userID, tripID=tripID, 
-                                        orderID=new_order.orderID, paymentID=new_payment.paymentID)
-                    new_ticket.save() # Ticket saves itself
-                    created_tickets_info.append(new_ticket) # Keep for display/return
+                createdTicketsInfo = []
+                for _ in range(numTicketsToBook):
+                    newTicket = Ticket(userID=currentUserID, tripID=tripID, 
+                                        orderID=newOrder.orderID, paymentID=newPayment.paymentID)
+                    newTicket.save() # Ticket saves itself
+                    createdTicketsInfo.append(newTicket) # Keep for display/return
                 
-                flash(f"{num_tickets_to_book} Ticket(s) purchased!", 'success')
+                flash(f"{numTicketsToBook} Ticket(s) purchased!", 'success')
                 return render_template('book_trip_form.html', title=f'Booking Confirmed', 
-                                       trip=trip_to_book, order=new_order, 
-                                       ticket=created_tickets_info[0] if created_tickets_info else None, # Show first ticket
+                                       trip=tripToBook, order=newOrder, 
+                                       ticket=createdTicketsInfo[0] if createdTicketsInfo else None, # Show first ticket
                                        booking_successful=True)
             else: # Payment failed
-                new_order.status = "PaymentFailed"
-                new_order.save()
+                newOrder.status = "PaymentFailed"
+                newOrder.save()
                 flash("Payment failed.", "error")
     
-    return render_template('book_trip_form.html', title=f'Book Trip: {trip_to_book.tripID}', 
-                           trip=trip_to_book, booking_successful=False)
+    return render_template('book_trip_form.html', title=f'Book Trip: {tripToBook.tripID}', 
+                           trip=tripToBook, booking_successful=False)
 
 
 # --- STANDALONE REFUND DEMO ROUTE ---
 @app.route('/standalone-refund-demo', methods=['GET', 'POST'])
-def request_refund_standalone_route():
-    current_userID = mock_userID 
+def requestRefundStandaloneRoute():
+    currentUserID = mockUserID 
 
     if request.method == 'POST':
         orderID_to_refund = request.form.get('orderID_to_refund')
-        order_to_refund = Order.find_by_id(orderID_to_refund)
+        order_to_refund = Order.findByID(orderID_to_refund)
 
         if not order_to_refund:
             flash("Order not found.", "error")
-        elif order_to_refund.userID != current_userID:
+        elif order_to_refund.userID != currentUserID:
             flash("This order does not belong to you.", "error")
         elif order_to_refund.status != "Completed":
             flash(f"Order (Status: {order_to_refund.status}) not eligible for refund.", "warning")
@@ -108,13 +108,13 @@ def request_refund_standalone_route():
             # --- Refund Logic (moved from service, simplified) ---
             success_overall = True
             messages = []
-            tickets_for_order = Ticket.find_by_orderID(order_to_refund.orderID)
+            tickets_for_order = Ticket.findByOrderID(order_to_refund.orderID)
             
             if not tickets_for_order:
                 order_to_refund.status = "ErrorNoTicketsForRefund"; order_to_refund.save()
                 flash("Order has no tickets to refund.", "error")
             else:
-                payment_for_order = Payment.find_by_orderID(order_to_refund.orderID)
+                payment_for_order = Payment.findByOrderID(order_to_refund.orderID)
                 if not payment_for_order:
                      flash("Original payment for order not found.", "error")
                      success_overall = False
@@ -124,27 +124,27 @@ def request_refund_standalone_route():
                     order_to_refund.status = "Refunded"; order_to_refund.save()
 
                 elif payment_for_order: # Proceed if payment exists and not already refunded
-                    num_tickets_refunded_this_op = 0
+                    numTickets_refunded_this_op = 0
                     for ticket in tickets_for_order:
                         if ticket.status == "Active":
                             if ticket.void():
                                 ticket.save() # Save voided status
-                                trip_of_ticket = Trip.find_by_id(ticket.tripID)
+                                trip_of_ticket = Trip.findByID(ticket.tripID)
                                 if trip_of_ticket:
-                                    trip_of_ticket.update_seats(1, operation="refund") # Assuming 1 ticket = 1 seat
+                                    trip_of_ticket.updateSeats(1, operation="refund") # Assuming 1 ticket = 1 seat
                                     trip_of_ticket.save()
                                 
                                 # Create refund record for this ticket
-                                refundAmount_this_ticket = order_to_refund.totalAmount / order_to_refund.num_tickets if order_to_refund.num_tickets > 0 else 0
+                                refundAmount_this_ticket = order_to_refund.totalAmount / order_to_refund.numTickets if order_to_refund.numTickets > 0 else 0
                                 new_refund = Refund(paymentID=ticket.paymentID, orderID=order_to_refund.orderID,
                                                     ticketID=ticket.ticketID, refundAmount=refundAmount_this_ticket)
                                 mock_gateway_refund_success = True # Simulate
                                 if mock_gateway_refund_success:
-                                    new_refund.update_status("Processed")
+                                    new_refund.updateStatus("Processed")
                                     ticket.status = "Refunded"
-                                    num_tickets_refunded_this_op += 1
+                                    numTickets_refunded_this_op += 1
                                 else:
-                                    new_refund.update_status("Failed")
+                                    new_refund.updateStatus("Failed")
                                     ticket.status = "RefundFailed"
                                     success_overall = False
                                 new_refund.save()
@@ -153,11 +153,11 @@ def request_refund_standalone_route():
                                 messages.append(f"Could not void ticket {ticket.ticketID}")
                                 success_overall = False
                     
-                    if num_tickets_refunded_this_op > 0:
+                    if numTickets_refunded_this_op > 0:
                          # Update overall payment and order status
                         payment_for_order.status = "Refunded" # Simplification
                         payment_for_order.save()
-                        if num_tickets_refunded_this_op == order_to_refund.num_tickets:
+                        if numTickets_refunded_this_op == order_to_refund.numTickets:
                             order_to_refund.status = "Refunded"
                         else:
                             order_to_refund.status = "PartiallyRefunded"
@@ -168,47 +168,47 @@ def request_refund_standalone_route():
                     else: # Some error occurred
                         flash("Refund processing encountered issues: " + " | ".join(messages), "error")
                         
-        return redirect(url_for('request_refund_standalone_route'))
+        return redirect(url_for('requestRefundStandaloneRoute'))
 
     orders_data_for_display = []
-    user_orders = Order.find_by_userID(current_userID)
+    user_orders = Order.find_by_userID(currentUserID)
     if user_orders:
         for order in user_orders:
-            trip = Trip.find_by_id(order.tripID)
+            trip = Trip.findByID(order.tripID)
             orders_data_for_display.append({"order": order, "trip": trip})
             
     if not orders_data_for_display:
-         flash(f"No orders found for user '{current_userID}'. Please ensure sample data exists.", "info")
+         flash(f"No orders found for user '{currentUserID}'. Please ensure sample data exists.", "info")
 
     return render_template('refund_request_standalone.html', 
                            title='Standalone Refund Demo', 
                            orders_to_display=orders_data_for_display,
-                           mock_userID=current_userID)
+                           mockUserID=currentUserID)
 
 
 # --- Admin Routes ---
-def admin_required(f): # Basic placeholder
+def adminRequired(f): # Basic placeholder
     # In real app, check admin session
     print(f"Mock Admin Access for: {mock_adminID}")
     return f
 
 @app.route('/admin/manage-routes', methods=['GET'])
-@admin_required 
-def admin_manage_routes_route():
-    routes = Route.get_all()
+@adminRequired 
+def adminManageRoutesRoute():
+    routes = Route.getAll()
     return render_template('admin_manage_routes.html', title="Admin: Manage Routes", routes=routes)
 
 @app.route('/admin/route/<routeID>/stops', methods=['GET'])
-@admin_required
-def admin_route_stops_route(routeID):
-    route = Route.find_by_id(routeID)
+@adminRequired
+def adminRouteStopsRoute(routeID):
+    route = Route.findByID(routeID)
     if not route:
         flash(f"Route with ID {routeID} not found.", "error")
-        return redirect(url_for('admin_manage_routes_route'))
+        return redirect(url_for('adminManageRoutesRoute'))
     
     stops_on_route_details = []
     for stopID in route.stopIDs:
-        stop = Stop.find_by_id(stopID)
+        stop = Stop.findByID(stopID)
         if stop:
             location = stop.get_location() # Use Stop's helper method
             stops_on_route_details.append({"stop": stop, "location": location})
@@ -218,19 +218,19 @@ def admin_route_stops_route(routeID):
                            route=route, stops_on_route=stops_on_route_details)
 
 @app.route('/admin/update-stop-location/<routeID>/<stopID>', methods=['GET', 'POST'])
-@admin_required
-def admin_update_stop_location_route(routeID, stopID):
+@adminRequired
+def adminUpdateStopLocationRoute(routeID, stopID):
     admin_userID = mock_adminID 
 
-    route = Route.find_by_id(routeID) 
-    stop_to_update = Stop.find_by_id(stopID)
+    route = Route.findByID(routeID) 
+    stop_to_update = Stop.findByID(stopID)
     current_location = None
     if stop_to_update:
         current_location = stop_to_update.get_location()
 
     if not route or not stop_to_update or not current_location:
         flash("Route, Stop, or its Location not found for update.", "error")
-        return redirect(url_for('admin_manage_routes_route')) 
+        return redirect(url_for('adminManageRoutesRoute')) 
 
     if request.method == 'POST':
         # ... (form data retrieval and validation as before) ...
@@ -243,11 +243,11 @@ def admin_update_stop_location_route(routeID, stopID):
             try:
                 lat_f = float(new_latitude_str); lon_f = float(new_longitude_str)
                 # --- Update Logic (moved from service) ---
-                if route.find_stopID(stopID): # Check if stop belongs to route
-                    success, message = stop_to_update.update_location_details(lat_f, lon_f, new_address, new_city, new_postcode)
+                if route.findStopID(stopID): # Check if stop belongs to route
+                    success, message = stop_to_update.updateLocationDetails(lat_f, lon_f, new_address, new_city, new_postcode)
                     if success:
                         flash(message, 'success')
-                        return redirect(url_for('admin_route_stops_route', routeID=routeID))
+                        return redirect(url_for('adminRouteStopsRoute', routeID=routeID))
                     else:
                         flash(message, 'error')
                 else:
@@ -261,15 +261,15 @@ def admin_update_stop_location_route(routeID, stopID):
                            route=route, stop=stop_to_update, current_location=current_location)
 
 @app.route('/admin/feedbacks', methods=['GET'])
-@admin_required
-def admin_manage_feedbacks_route():
+@adminRequired
+def adminManageFeedbacksRoute():
     status_filter = request.args.get('status', 'New')
-    all_feedbacks = Feedback.get_all(status_filter=status_filter if status_filter != "All" else None)
+    all_feedbacks = Feedback.getAll(status_filter=status_filter if status_filter != "All" else None)
     
     feedbacks_data_for_display = []
     if all_feedbacks:
         for fb in all_feedbacks:
-            submitter = User.find_by_id(fb.submitter_userID) # Find by actual userID now
+            submitter = User.findByID(fb.submitterUserID) # Find by actual userID now
             submitter_name = submitter.username if submitter else "Unknown User"
             responses = fb.get_responses() # Use Feedback's helper method
             feedbacks_data_for_display.append({"feedback": fb, "submitter_name": submitter_name, "responses": responses})
@@ -281,15 +281,15 @@ def admin_manage_feedbacks_route():
                            all_statuses=all_statuses, current_status_filter=status_filter)
 
 @app.route('/admin/feedback/<feedbackID>/respond', methods=['GET', 'POST'])
-@admin_required
-def admin_respond_to_feedback_route(feedbackID):
+@adminRequired
+def adminRespondToFeedbackRoute(feedbackID):
     admin_userID = mock_adminID 
-    feedback_to_respond = Feedback.find_by_id(feedbackID)
+    feedback_to_respond = Feedback.findByID(feedbackID)
 
     if not feedback_to_respond:
-        flash("Feedback item not found.", "error"); return redirect(url_for('admin_manage_feedbacks_route'))
+        flash("Feedback item not found.", "error"); return redirect(url_for('adminManageFeedbacksRoute'))
 
-    submitter = User.find_by_id(feedback_to_respond.submitter_userID)
+    submitter = User.findByID(feedback_to_respond.submitterUserID)
     submitter_name = submitter.username if submitter else "Unknown User"
     existing_responses = feedback_to_respond.get_responses()
 
@@ -299,22 +299,22 @@ def admin_respond_to_feedback_route(feedbackID):
             flash("Response text cannot be empty.", "error")
         else:
             # --- Response Logic (moved from service) ---
-            new_response = Response(feedbackID=feedbackID, responder_adminID=admin_userID, responseContent=response_text)
+            new_response = Response(feedbackID=feedbackID, responderAdminID=admin_userID, responseContent=response_text)
             new_response.save() # Response saves itself
             
-            feedback_to_respond.add_responseID(new_response.responseID)
-            feedback_to_respond.update_status("Responded")
+            feedback_to_respond.addResponseID(new_response.responseID)
+            feedback_to_respond.updateStatus("Responded")
             feedback_to_respond.save() # Feedback saves itself
 
             # Create and save notification
             notif_msg = f"Admin responded to your feedback (ID: {feedbackID}): '{response_text[:30]}...'"
-            notification = Notification(recipientuserID=feedback_to_respond.submitter_userID,
-                                        senderuserID=admin_userID, message_content=notif_msg,
+            notification = Notification(recipientuserID=feedback_to_respond.submitterUserID,
+                                        senderuserID=admin_userID, messageContent=notif_msg,
                                         notificationType="FeedbackResponse")
             notification.save() # Notification saves itself
 
             flash("Response submitted and user notified (mock).", "success")
-            return redirect(url_for('admin_manage_feedbacks_route'))
+            return redirect(url_for('adminManageFeedbacksRoute'))
                 
     return render_template('admin_respond_feedback_form.html',
                            title=f"Respond to Feedback ID: {feedback_to_respond.feedbackID}",
@@ -324,8 +324,8 @@ def admin_respond_to_feedback_route(feedbackID):
 if __name__ == '__main__':
     
    # Ensure mock users exist
-    if not User.findByID(mock_userID): # Assuming mock_userID is correctly defined and used
-        User(username="mockuser", email="mock@example.com", password="password", userID=mock_userID).save()
+    if not User.findByID(mockUserID): # Assuming mockUserID is correctly defined and used
+        User(username="mockuser", email="mock@example.com", password="password", userID=mockUserID).save()
     
     # Use the defined variable name: mock_adminID
     if not User.findByID(mock_adminID): 

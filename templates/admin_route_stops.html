@@ -5,7 +5,7 @@
     {% if messages %}{% for cat, msg in messages %}<div class="flash-message {{cat}}">{{msg}}</div>{% endfor %}{% endif %}
 {% endwith %}
 
-<p><a href="{{ url_for('admin_manage_routes_route') }}">« Back to All Routes</a></p>
+<p><a href="{{ url_for('adminManageRoutesRoute') }}">« Back to All Routes</a></p>
 
 {% if stops_on_route %}
     <table>
@@ -23,7 +23,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a href="{{ url_for('admin_update_stop_location_route', routeID=route.routeID, stopID=item.stop.stopID) }}" class="btn btn-small">Update Location</a>
+                    <a href="{{ url_for('adminUpdateStopLocationRoute', routeID=route.routeID, stopID=item.stop.stopID) }}" class="btn btn-small">Update Location</a>
                     {# Add link for Remove Stop from Route #}
                 </td>
             </tr>

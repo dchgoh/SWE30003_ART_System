@@ -3,27 +3,27 @@
         "notificationID": "notif-uuid-001",
         "recipientuserID": "mock_user_001",
         "senderuserID": "admin_user_001",
-        "message_content": "Admin has responded to your feedback (ID: fb-uuid-003). Response: 'Thank you for your suggestion regarding the new shopp...' (see details)",
+        "messageContent": "Admin has responded to your feedback (ID: fb-uuid-003). Response: 'Thank you for your suggestion regarding the new shopp...' (see details)",
         "notificationType": "FeedbackResponse",
-        "sent_datetime": "2025-07-19T15:45:05+00:00",
-        "read_status": false
+        "sentDatetime": "2025-07-19T15:45:05+00:00",
+        "readStatus": false
     },
     {
         "notificationID": "7efa58f7-69cb-455a-bba9-710ae873d1cd",
         "recipientuserID": "another_userID_example",
         "senderuserID": "admin_user_001",
-        "message_content": "Admin has responded to your feedback (ID: fb-uuid-002). Response: 'Thanks!...'",
+        "messageContent": "Admin has responded to your feedback (ID: fb-uuid-002). Response: 'Thanks!...'",
         "notificationType": "FeedbackResponse",
-        "sent_datetime": "2025-05-20T23:11:45.694967",
-        "read_status": false
+        "sentDatetime": "2025-05-20T23:11:45.694967",
+        "readStatus": false
     },
     {
         "notificationID": "3e7aaeb5-b104-4676-b425-4f870f5865dd",
         "recipientuserID": "mock_user_001",
         "senderuserID": "admin_user_001",
-        "message_content": "Admin has responded to your feedback (ID: fb-uuid-001). Response: 'NOTED. We will improve on our service. Thank You...'",
+        "messageContent": "Admin has responded to your feedback (ID: fb-uuid-001). Response: 'NOTED. We will improve on our service. Thank You...'",
         "notificationType": "FeedbackResponse",
-        "sent_datetime": "2025-05-24T22:36:40.805709",
-        "read_status": false
+        "sentDatetime": "2025-05-24T22:36:40.805709",
+        "readStatus": false
     }
 ]
