@@ -29,21 +29,21 @@
                 <tbody>
                     {% for trip in trips %}
                     <tr>
-                        <td><input type="radio" name="trip_id" value="{{ trip.trip_id }}" required></td>
-                        <td>{{ trip.trip_id }}</td>
+                        <td><input type="radio" name="tripID" value="{{ trip.tripID }}" required></td>
+                        <td>{{ trip.tripID }}</td>
                         <td>{{ trip.origin }}</td>
                         <td>{{ trip.destination }}</td>
-                        <td>{{ trip.departure_time }}</td>
+                        <td>{{ trip.departureTime }}</td>
                         <td>{{ "%.2f"|format(trip.price) }}</td>
-                        <td>{{ trip.available_seats }}</td>
+                        <td>{{ trip.availableSeats }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
             <br>
             <!-- Simple user ID input for now, replace with logged-in user logic later -->
-            <!-- <input type="hidden" name="user_id" value="mock_user_001"> -->
-            <!-- We are using mock_user_id in the backend route for now -->
+            <!-- <input type="hidden" name="userID" value="mock_user_001"> -->
+            <!-- We are using mock_userID in the backend route for now -->
 
             <div>
                 <button type="submit" class="btn">Confirm Purchase (Mock Payment)</button>

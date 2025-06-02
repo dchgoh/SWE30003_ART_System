@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2>Admin: Stops for Route - {{ route.route_name }}</h2>
+<h2>Admin: Stops for Route - {{ route.routeName }}</h2>
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}{% for cat, msg in messages %}<div class="flash-message {{cat}}">{{msg}}</div>{% endfor %}{% endif %}
 {% endwith %}
@@ -13,17 +13,17 @@
         <tbody>
         {% for item in stops_on_route %}
             <tr>
-                <td>{{ item.stop.stop_name }}</td>
-                <td>{{ item.stop.stop_code }}</td>
+                <td>{{ item.stop.stopName }}</td>
+                <td>{{ item.stop.stopCode }}</td>
                 <td>
                     {% if item.location %}
-                        {{ item.location.address_line1 }}, {{ item.location.city }} (Lat: {{ item.location.latitude }}, Lon: {{ item.location.longitude }})
+                        {{ item.location.addressLine1 }}, {{ item.location.city }} (Lat: {{ item.location.latitude }}, Lon: {{ item.location.longitude }})
                     {% else %}
                         No location data.
                     {% endif %}
                 </td>
                 <td>
-                    <a href="{{ url_for('admin_update_stop_location_route', route_id=route.route_id, stop_id=item.stop.stop_id) }}" class="btn btn-small">Update Location</a>
+                    <a href="{{ url_for('admin_update_stop_location_route', routeID=route.routeID, stopID=item.stop.stopID) }}" class="btn btn-small">Update Location</a>
                     {# Add link for Remove Stop from Route #}
                 </td>
             </tr>

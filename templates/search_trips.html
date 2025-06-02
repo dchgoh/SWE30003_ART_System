@@ -51,14 +51,14 @@
                 <tbody>
                     {% for trip in trips %}
                     <tr>
-                        <td data-label="Trip ID">{{ trip.trip_id }}</td>
+                        <td data-label="Trip ID">{{ trip.tripID }}</td>
                         <td data-label="Origin">{{ trip.origin }}</td>
                         <td data-label="Destination">{{ trip.destination }}</td>
-                        <td data-label="Departure">{{ trip.departure_time }}</td>
+                        <td data-label="Departure">{{ trip.departureTime }}</td>
                         <td data-label="Price (RM)">{{ "%.2f"|format(trip.price) }}</td>
-                        <td data-label="Seats Left">{{ trip.available_seats }}</td>
+                        <td data-label="Seats Left">{{ trip.availableSeats }}</td>
                         <td data-label="Action">
-                            <a href="{{ url_for('book_trip_route', trip_id=trip.trip_id) }}" class="btn btn-small">Book Now</a>
+                            <a href="{{ url_for('book_trip_route', tripID=trip.tripID) }}" class="btn btn-small">Book Now</a>
                         </td>
                     </tr>
                     {% endfor %}

@@ -1,20 +1,20 @@
 [
     {
-        "route_id": "ROUTE001",
-        "route_name": "City Center Express",
+        "routeID": "ROUTE001",
+        "routeName": "City Center Express",
         "description": "Direct route from Downtown to Uptown.",
-        "stop_ids": ["STOP001", "STOP002", "STOP003"]
+        "stopIDs": ["STOP001", "STOP002", "STOP003"]
     },
     {
-        "route_id": "ROUTE002",
-        "route_name": "Suburb Connector",
+        "routeID": "ROUTE002",
+        "routeName": "Suburb Connector",
         "description": "Connects major suburban areas to the city.",
-        "stop_ids": ["STOP004", "STOP001", "STOP005"]
+        "stopIDs": ["STOP004", "STOP001", "STOP005"]
     },
     {
-        "route_id": "ROUTE003",
-        "route_name": "Airport Shuttle",
+        "routeID": "ROUTE003",
+        "routeName": "Airport Shuttle",
         "description": "Route to and from the International Airport.",
-        "stop_ids": ["STOP006", "STOP007"]
+        "stopIDs": ["STOP006", "STOP007"]
     }
 ]

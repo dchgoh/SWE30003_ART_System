@@ -1,14 +1,14 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2>Update Location for Stop: {{ stop.stop_name }} (Route: {{route.route_name}})</h2>
+<h2>Update Location for Stop: {{ stop.stopName }} (Route: {{route.routeName}})</h2>
 
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}{% for cat, msg in messages %}<div class="flash-message {{cat}}">{{msg}}</div>{% endfor %}{% endif %}
 {% endwith %}
 
-<p><a href="{{ url_for('admin_route_stops_route', route_id=route.route_id) }}">« Back to Stops for {{route.route_name}}</a></p>
+<p><a href="{{ url_for('admin_route_stops_route', routeID=route.routeID) }}">« Back to Stops for {{route.routeName}}</a></p>
 
-<form method="POST" action="{{ url_for('admin_update_stop_location_route', route_id=route.route_id, stop_id=stop.stop_id) }}">
+<form method="POST" action="{{ url_for('admin_update_stop_location_route', routeID=route.routeID, stopID=stop.stopID) }}">
     <div>
         <label for="latitude">Latitude:</label>
         <input type="text" id="latitude" name="latitude" value="{{ request.form.latitude or current_location.latitude }}" required>
@@ -19,7 +19,7 @@
     </div>
     <div>
         <label for="address">Address Line 1:</label>
-        <input type="text" id="address" name="address" value="{{ request.form.address or current_location.address_line1 }}" required>
+        <input type="text" id="address" name="address" value="{{ request.form.address or current_location.addressLine1 }}" required>
     </div>
     <div>
         <label for="city">City:</label>

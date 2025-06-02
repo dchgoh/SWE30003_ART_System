@@ -1,23 +1,23 @@
 [
     {
-        "response_id": "resp-uuid-001",
-        "feedback_id": "fb-uuid-003",
-        "responder_admin_id": "admin_user_001",
-        "response_content": "Thank you for your suggestion regarding the new shopping mall route. We have passed this on to our planning department for consideration in future updates. We appreciate your feedback!",
-        "response_datetime": "2025-07-19T15:45:00+00:00"
+        "responseID": "resp-uuid-001",
+        "feedbackID": "fb-uuid-003",
+        "responder_adminID": "admin_user_001",
+        "responseContent": "Thank you for your suggestion regarding the new shopping mall route. We have passed this on to our planning department for consideration in future updates. We appreciate your feedback!",
+        "responseDatetime": "2025-07-19T15:45:00+00:00"
     },
     {
-        "response_id": "5f34e8a8-0ea0-405d-bd49-b882555f31a2",
-        "feedback_id": "fb-uuid-002",
-        "responder_admin_id": "admin_user_001",
-        "response_content": "Thanks!",
-        "response_datetime": "2025-05-20T23:11:45.691902"
+        "responseID": "5f34e8a8-0ea0-405d-bd49-b882555f31a2",
+        "feedbackID": "fb-uuid-002",
+        "responder_adminID": "admin_user_001",
+        "responseContent": "Thanks!",
+        "responseDatetime": "2025-05-20T23:11:45.691902"
     },
     {
-        "response_id": "ddd4f18f-a86f-43a3-8372-845ac07217e2",
-        "feedback_id": "fb-uuid-001",
-        "responder_admin_id": "admin_user_001",
-        "response_content": "NOTED. We will improve on our service. Thank You",
-        "response_datetime": "2025-05-24T22:36:40.804129"
+        "responseID": "ddd4f18f-a86f-43a3-8372-845ac07217e2",
+        "feedbackID": "fb-uuid-001",
+        "responder_adminID": "admin_user_001",
+        "responseContent": "NOTED. We will improve on our service. Thank You",
+        "responseDatetime": "2025-05-24T22:36:40.804129"
     }
 ]

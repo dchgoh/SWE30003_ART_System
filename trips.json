@@ -1,26 +1,26 @@
 [
     {
-        "trip_id": "TRP001",
+        "tripID": "TRP001",
         "origin": "Kuching Sentral",
         "destination": "Serian",
-        "departure_time": "2025-07-15 09:00",
+        "departureTime": "2025-07-15 09:00",
         "price": 15.0,
-        "available_seats": 45
+        "availableSeats": 45
     },
     {
-        "trip_id": "TRP002",
+        "tripID": "TRP002",
         "origin": "Kuching Sentral",
         "destination": "Sibu",
-        "departure_time": "2025-07-15 10:00",
+        "departureTime": "2025-07-15 10:00",
         "price": 60.0,
-        "available_seats": 30
+        "availableSeats": 30
     },
     {
-        "trip_id": "TRP003",
+        "tripID": "TRP003",
         "origin": "Serian",
         "destination": "Kuching Sentral",
-        "departure_time": "2025-07-15 14:00",
+        "departureTime": "2025-07-15 14:00",
         "price": 15.0,
-        "available_seats": 45
+        "availableSeats": 45
     }
 ]

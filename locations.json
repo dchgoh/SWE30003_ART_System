@@ -1,58 +1,58 @@
 [
     {
-        "location_id": "LOC001",
+        "locationID": "LOC001",
         "latitude": 3.139003,
         "longitude": 101.693207,
-        "address_line1": "123 Main Street",
+        "addressLine1": "123 Main Street",
         "city": "City Center",
         "postcode": "50000"
     },
     {
-        "location_id": "LOC002",
+        "locationID": "LOC002",
         "latitude": 3.140567,
         "longitude": 101.695012,
-        "address_line1": "45 Market Avenue",
+        "addressLine1": "45 Market Avenue",
         "city": "Downtown",
         "postcode": "50001"
     },
     {
-        "location_id": "LOC003",
+        "locationID": "LOC003",
         "latitude": 1.557689,
         "longitude": 110.343903,
-        "address_line1": "789 Uptown Road",
+        "addressLine1": "789 Uptown Road",
         "city": "Uptown Kuching",
         "postcode": "93350"
     },
     {
-        "location_id": "LOC004",
+        "locationID": "LOC004",
         "latitude": 1.4922,
         "longitude": 110.348,
-        "address_line1": "10 West Suburb Drive",
+        "addressLine1": "10 West Suburb Drive",
         "city": "West Suburbia",
         "postcode": "93250"
     },
     {
-        "location_id": "LOC005",
+        "locationID": "LOC005",
         "latitude": 1.56789,
         "longitude": 110.400123,
-        "address_line1": "21 East Park Lane",
+        "addressLine1": "21 East Park Lane",
         "city": "East Suburbia",
         "postcode": "93300"
     },
     {
-        "location_id": "LOC006",
+        "locationID": "LOC006",
         "latitude": 1.483895,
         "longitude": 110.332019,
-        "address_line1": "Kuching International Airport, Terminal 1",
+        "addressLine1": "Kuching International Airport, Terminal 1",
         "city": "Kuching",
-        "postcode": "93722"
+        "postcode": "93350"
     },
     {
-        "location_id": "LOC007",
+        "locationID": "LOC007",
         "latitude": 1600.0,
         "longitude": 888.22,
-        "address_line1": "Kuching International Airport, Terminal 10",
+        "addressLine1": "Kuching International Airport, Terminal 10",
         "city": "Kuching",
-        "postcode": "93700"
+        "postcode": "12345"
     }
 ]

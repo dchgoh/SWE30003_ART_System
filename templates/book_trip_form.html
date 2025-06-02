@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h2>Confirm Booking for Trip: {{ trip.trip_id }}</h2>
+    <h2>Confirm Booking for Trip: {{ trip.tripID }}</h2>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -15,14 +15,14 @@
         <h3>Trip Details:</h3>
         <p><strong>Origin:</strong> {{ trip.origin }}</p>
         <p><strong>Destination:</strong> {{ trip.destination }}</p>
-        <p><strong>Departure:</strong> {{ trip.departure_time }}</p>
+        <p><strong>Departure:</strong> {{ trip.departureTime }}</p>
         <p><strong>Price:</strong> RM {{ "%.2f"|format(trip.price) }}</p>
-        <p><strong>Seats Available:</strong> {{ trip.available_seats }}</p> {# This will show updated seats after booking #}
+        <p><strong>Seats Available:</strong> {{ trip.availableSeats }}</p> {# This will show updated seats after booking #}
 
         {# Conditionally show the form or a success message #}
         {% if not booking_successful %}
-            {% if trip.available_seats > 0 %}
-                <form method="POST" action="{{ url_for('book_trip_route', trip_id=trip.trip_id) }}">
+            {% if trip.availableSeats > 0 %}
+                <form method="POST" action="{{ url_for('book_trip_route', tripID=trip.tripID) }}">
                     <br>
                     <p>Click below to confirm your booking (payment will be simulated).</p>
                     <div>

@@ -31,17 +31,17 @@
         {% for item in feedbacks_data %}
         <div class="feedback-card">
             <div class="feedback-card-header">
-                <h4 class="feedback-id">Feedback ID: {{ item.feedback.feedback_id }}</h4>
+                <h4 class="feedback-id">Feedback ID: {{ item.feedback.feedbackID }}</h4>
                 <span class="feedback-status status-{{ item.feedback.status|lower }}">{{ item.feedback.status }}</span>
             </div>
             <div class="feedback-card-body">
-                <p><strong>Submitted by:</strong> {{ item.submitter_name }} (User ID: {{ item.feedback.submitter_user_id }})</p>
-                <p><strong>Date:</strong> {{ item.feedback.submission_datetime.strftime('%Y-%m-%d %H:%M') }}</p>
+                <p><strong>Submitted by:</strong> {{ item.submitter_name }} (User ID: {{ item.feedback.submitter_userID }})</p>
+                <p><strong>Date:</strong> {{ item.feedback.submissionDatetime.strftime('%Y-%m-%d %H:%M') }}</p>
                 {% if item.feedback.rating %}
                     <p><strong>Rating:</strong> {{ item.feedback.rating }} / 5</p>
                 {% endif %}
-                {% if item.feedback.related_trip_id %}
-                    <p><strong>Related Trip ID:</strong> {{ item.feedback.related_trip_id }}</p>
+                {% if item.feedback.relatedtripID %}
+                    <p><strong>Related Trip ID:</strong> {{ item.feedback.relatedtripID }}</p>
                 {% endif %}
                 <p class="feedback-content-preview">
                     <strong>Content:</strong> <em>{{ item.feedback.feedback_content|truncate(100, True) }}</em>
@@ -49,7 +49,7 @@
                  <p><small>Number of responses: {{ item.responses|length }}</small></p>
             </div>
             <div class="feedback-card-actions">
-                <a href="{{ url_for('admin_respond_to_feedback_route', feedback_id=item.feedback.feedback_id) }}" class="btn btn-primary btn-small">
+                <a href="{{ url_for('admin_respond_to_feedback_route', feedbackID=item.feedback.feedbackID) }}" class="btn btn-primary btn-small">
                     <i class="fas fa-reply"></i> View & Respond
                 </a>
             </div>
