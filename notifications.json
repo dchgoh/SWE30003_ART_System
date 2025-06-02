@@ -16,5 +16,14 @@
         "notification_type": "FeedbackResponse",
         "sent_datetime": "2025-05-20T23:11:45.694967",
         "read_status": false
+    },
+    {
+        "notification_id": "3e7aaeb5-b104-4676-b425-4f870f5865dd",
+        "recipient_user_id": "mock_user_001",
+        "sender_user_id": "admin_user_001",
+        "message_content": "Admin has responded to your feedback (ID: fb-uuid-001). Response: 'NOTED. We will improve on our service. Thank You...'",
+        "notification_type": "FeedbackResponse",
+        "sent_datetime": "2025-05-24T22:36:40.805709",
+        "read_status": false
     }
 ]

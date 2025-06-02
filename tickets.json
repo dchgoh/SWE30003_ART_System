@@ -78,5 +78,25 @@
         "seat_number": "Any Available",
         "issue_datetime": "2025-05-20T23:27:23.619440",
         "status": "Refunded"
+    },
+    {
+        "ticket_id": "d036ef5a-39ce-43c7-92fb-88a0d6bcc047",
+        "user_id": "mock_user_001",
+        "trip_id": "TRP001",
+        "order_id": "7e1bc846-846f-43f0-987b-3549ea5b6f55",
+        "payment_id": "56bc4e11-79be-4edb-93a1-c6809251ef99",
+        "seat_number": "Any Available",
+        "issue_datetime": "2025-05-23T10:43:12.077315",
+        "status": "Refunded"
+    },
+    {
+        "ticket_id": "e11baa1f-e43e-45c2-bea0-a88ec4af0657",
+        "user_id": "mock_user_001",
+        "trip_id": "TRP001",
+        "order_id": "a0b57ffc-1104-44c3-950d-a35c59876399",
+        "payment_id": "dac6ce17-9ba2-40f6-8f75-82e22cace9a7",
+        "seat_number": "Any Available",
+        "issue_datetime": "2025-06-02T01:29:21.732644",
+        "status": "Refunded"
     }
 ]

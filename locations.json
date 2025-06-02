@@ -49,10 +49,10 @@
     },
     {
         "location_id": "LOC007",
-        "latitude": 1111.0,
-        "longitude": 110.333,
-        "address_line1": "Kuching International Airport, Terminal 2",
+        "latitude": 1600.0,
+        "longitude": 888.22,
+        "address_line1": "Kuching International Airport, Terminal 10",
         "city": "Kuching",
-        "postcode": "93722"
+        "postcode": "93700"
     }
 ]

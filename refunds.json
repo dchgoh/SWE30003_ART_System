@@ -42,5 +42,27 @@
         "status": "Processed",
         "request_datetime": "2025-05-20T23:27:30.182999",
         "processed_datetime": "2025-05-20T23:27:30.183005"
+    },
+    {
+        "refund_id": "52796c04-ce2b-44c5-905e-cea25ca86f2f",
+        "payment_id": "56bc4e11-79be-4edb-93a1-c6809251ef99",
+        "order_id": "7e1bc846-846f-43f0-987b-3549ea5b6f55",
+        "ticket_id": "d036ef5a-39ce-43c7-92fb-88a0d6bcc047",
+        "refund_amount": 15.0,
+        "refund_reason": "User requested cancellation",
+        "status": "Processed",
+        "request_datetime": "2025-05-23T11:19:08.411804",
+        "processed_datetime": "2025-05-23T11:19:08.411814"
+    },
+    {
+        "refund_id": "32ce9000-2142-4f16-8182-b5c466e18f65",
+        "payment_id": "dac6ce17-9ba2-40f6-8f75-82e22cace9a7",
+        "order_id": "a0b57ffc-1104-44c3-950d-a35c59876399",
+        "ticket_id": "e11baa1f-e43e-45c2-bea0-a88ec4af0657",
+        "refund_amount": 15.0,
+        "refund_reason": "User requested",
+        "status": "Processed",
+        "request_datetime": "2025-06-02T01:29:24.970977",
+        "processed_datetime": "2025-06-02T01:29:24.970987"
     }
 ]

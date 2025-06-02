@@ -9,12 +9,21 @@
         "status": "Refunded"
     },
     {
-        "order_id": "10fa2fcf-e33b-4c07-be26-8bce6cba4997",
+        "order_id": "7e1bc846-846f-43f0-987b-3549ea5b6f55",
         "user_id": "mock_user_001",
-        "trip_id": "TRP002",
+        "trip_id": "TRP001",
         "num_tickets": 1,
-        "total_amount": 60.0,
-        "order_datetime": "2025-05-20T23:27:23.520860",
+        "total_amount": 15.0,
+        "order_datetime": "2025-05-23T10:43:11.984855",
+        "status": "Refunded"
+    },
+    {
+        "order_id": "a0b57ffc-1104-44c3-950d-a35c59876399",
+        "user_id": "mock_user_001",
+        "trip_id": "TRP001",
+        "num_tickets": 1,
+        "total_amount": 15.0,
+        "order_datetime": "2025-06-02T01:29:21.667537",
         "status": "Refunded"
     }
 ]
