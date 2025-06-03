@@ -3,13 +3,13 @@
         "routeID": "ROUTE001",
         "routeName": "City Center Express",
         "description": "Direct route from Downtown to Uptown.",
-        "stopIDs": ["STOP001", "STOP002", "STOP003"]
+        "stopIDs": []
     },
     {
         "routeID": "ROUTE002",
         "routeName": "Suburb Connector",
         "description": "Connects major suburban areas to the city.",
-        "stopIDs": ["STOP004", "STOP001", "STOP005"]
+        "stopIDs": []
     },
     {
         "routeID": "ROUTE003",

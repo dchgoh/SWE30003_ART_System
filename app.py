@@ -15,28 +15,47 @@ def home():
     return render_template('index.html', title='Welcome')
 
 # --- User Facing Routes ---
-# REGISTRATION ROUTE IS REMOVED
-
 @app.route('/search-trips', methods=['GET'])
-def searchTripsRoute(): # camelCase route function name
-    originQuery = request.args.get('origin', '').strip()      # camelCase local variable
-    destinationQuery = request.args.get('destination', '').strip() # camelCase local variable
-    dateQuery = request.args.get('date', '').strip()         # camelCase local variable
+def searchTripsRoute(): # Assuming you are using camelCase for route functions
+    originQuery = request.args.get('origin', '').strip()
+    destinationQuery = request.args.get('destination', '').strip()
+    dateQuery = request.args.get('date', '').strip()
     
-    # Use model's static search method with camelCase parameters
-    tripsFound = Trip.search( 
-        origin=originQuery if originQuery else None,
-        destination=destinationQuery if destinationQuery else None,
-        dateStr=dateQuery if dateQuery else None # CORRECTED: dateStr to match model method
-    )
-    searchPerformed = bool(originQuery or destinationQuery or dateQuery) # camelCase local variable
+    tripsFound = []
+    # Determine if a search was actively performed by checking if any search parameters were provided
+    searchPerformed = bool(originQuery or destinationQuery or dateQuery)
+    validationPassed = True
+
+    if searchPerformed:
+        # --- INPUT VALIDATION (as implemented before) ---
+        if originQuery and originQuery.isdigit():
+            flash("Invalid input: Origin cannot be just numbers.", "error")
+            validationPassed = False
+        if destinationQuery and destinationQuery.isdigit():
+            flash("Invalid input: Destination cannot be just numbers.", "error")
+            validationPassed = False
+        # ... (your date validation) ...
+
+        if validationPassed:
+            tripsFound = Trip.search( # Using "Smart Model" static method directly
+                origin=originQuery if originQuery else None,
+                destination=destinationQuery if destinationQuery else None,
+                dateStr=dateQuery if dateQuery else None
+            )
+            if not tripsFound: # If search was done but no results
+                 flash("No trips found matching your criteria.", "info")
+    else:
+        tripsFound = Trip.search(origin=None, destination=None, dateStr=None)
+        if not tripsFound:
+            flash("No trips are currently available.", "info") # Message for initial load if nothing is there
+
     return render_template('search_trips.html',
                            title='Search & Book Tickets',
                            trips=tripsFound,
-                           search_origin=originQuery,      # Template variable can be snake_case if preferred for HTML
-                           search_destination=destinationQuery,
-                           search_date=dateQuery,
-                           search_performed=searchPerformed)
+                           searchOrigin=originQuery,      # Pass search terms back to repopulate form
+                           searchDestination=destinationQuery,
+                           searchDate=dateQuery,
+                           searchPerformed=searchPerformed) # Flag to template if a specific search was done
 
 @app.route('/book-trip/<tripID>', methods=['GET', 'POST'])
 def bookTripRoute(tripID): # camelCase parameter
@@ -247,47 +266,105 @@ def adminRouteStopsRoute(routeID): # camelCase parameter
                            route=route, stops_on_route=stopsOnRouteDetails)
 
 @app.route('/admin/update-stop-location/<routeID>/<stopID>', methods=['GET', 'POST'])
-@adminRequired
-def adminUpdateStopLocationRoute(routeID, stopID): # camelCase parameters
-    adminUserID = mock_adminID # camelCase variable
+@adminRequired 
+def adminUpdateStopLocationRoute(routeID, stopID):
+    adminUserID = mock_adminID 
 
     route = Route.findByID(routeID) 
-    stopToUpdate = Stop.findByID(stopID) # camelCase local variable
-    currentLocation = None # camelCase local variable
+    stopToUpdate = Stop.findByID(stopID)
+    currentLocation = None
     if stopToUpdate:
         currentLocation = stopToUpdate.getLocation()
 
     if not route or not stopToUpdate or not currentLocation:
-        flash("Route, Stop, or its Location not found for update.", "error")
+        flash("Route, Stop, or its current Location not found for update.", "error")
         return redirect(url_for('adminManageRoutesRoute')) 
 
     if request.method == 'POST':
-        newLatitudeStr = request.form.get('latitude')
-        newLongitudeStr = request.form.get('longitude')
-        newAddress = request.form.get('addressLine1') # Match form field if it's addressLine1
-        newCity = request.form.get('city')
-        newPostcode = request.form.get('postcode')
+        newLatitudeStr = request.form.get('latitude', '').strip()
+        newLongitudeStr = request.form.get('longitude', '').strip()
+        newAddress = request.form.get('addressLine1', '').strip()
+        newCity = request.form.get('city', '').strip()
+        newPostcodeStr = request.form.get('postcode', '').strip() # Get postcode as string first
 
-        if not all([newLatitudeStr, newLongitudeStr, newAddress, newCity, newPostcode]):
-            flash("All location fields are required.", "error")
-        else:
+        errors = []
+        newLatitude = None
+        newLongitude = None
+
+        # 1. Presence Checks (Required Fields)
+        if not newLatitudeStr: errors.append("New Latitude is required.")
+        if not newLongitudeStr: errors.append("New Longitude is required.")
+        if not newAddress: errors.append("New Address Line 1 is required.")
+        if not newCity: errors.append("New City is required.")
+        if not newPostcodeStr: errors.append("New Postcode is required.")
+
+        # 2. Validate Latitude (must be a number, then check range)
+        if newLatitudeStr: # Only if provided
             try:
-                latF = float(newLatitudeStr); lonF = float(newLongitudeStr) # camelCase local variable
-                if route.findStopID(stopID): # camelCase method call
-                    success, message = stopToUpdate.updateLocationDetails(latF, lonF, newAddress, newCity, newPostcode) # camelCase method call
-                    if success:
-                        flash(message, 'success')
-                        return redirect(url_for('adminRouteStopsRoute', routeID=routeID))
-                    else:
-                        flash(message, 'error')
-                else:
-                    flash(f"Stop ID '{stopID}' not found on Route '{route.routeName}'.", "error")
+                newLatitude = float(newLatitudeStr)
+                if not (-90 <= newLatitude <= 90):
+                    errors.append("Latitude must be between -90 and 90.")
             except ValueError:
-                flash("Latitude and Longitude must be valid numbers.", "error")
+                errors.append("Latitude must be a valid number (e.g., 3.14159).")
+        
+        # 3. Validate Longitude (must be a number, then check range)
+        if newLongitudeStr: # Only if provided
+            try:
+                newLongitude = float(newLongitudeStr)
+                if not (-180 <= newLongitude <= 180):
+                    errors.append("Longitude must be between -180 and 180.")
+            except ValueError:
+                errors.append("Longitude must be a valid number (e.g., 101.6932).")
+
+        # 4. Validate Address Line 1 (should not be purely numeric)
+        if newAddress and newAddress.isdigit():
+            errors.append("Address Line 1 should not consist only of numbers.")
+        elif newAddress and len(newAddress) > 200: 
+            errors.append("Address Line 1 is too long (max 200 characters).")
+            
+        # 5. Validate City (should not be purely numeric)
+        if newCity and newCity.isdigit():
+            errors.append("City name should not consist only of numbers.")
+        elif newCity and len(newCity) > 50: 
+            errors.append("City name is too long (max 50 characters).")
+
+        # 6. Validate Postcode 
+        # (Can be complex. For simplicity: check if not empty and basic length. 
+        #  Allowing alphanumeric for flexibility, but could be stricter with regex if needed.)
+        if newPostcodeStr:
+            if len(newPostcodeStr) > 10: # Basic length check
+                 errors.append("Postcode is too long (max 10 characters).")
+            # Example: If postcode MUST be digits for your region:
+            # if not newPostcodeStr.isdigit():
+            #     errors.append("Postcode must consist only of numbers for this region.")
+            # elif len(newPostcodeStr) > 10: # Check length after confirming it's digits
+            #     errors.append("Postcode is too long (max 10 digits).")
+        # For now, we are keeping the initial presence check for postcode.
+        # The Location model's __init__ might also try to convert postcode if it expects an int.
+
+        if errors:
+            for error_msg in errors:
+                flash(error_msg, "error")
+        else:
+            # All validations passed, proceed with update
+            if route.findStopID(stopID): 
+                # Pass the already converted float values for lat/lon
+                success, message = stopToUpdate.updateLocationDetails(
+                    newLatitude, newLongitude, newAddress, newCity, newPostcodeStr # Pass postcode as string
+                )
+                if success:
+                    flash(message, 'success')
+                    return redirect(url_for('adminRouteStopsRoute', routeID=routeID))
+                else:
+                    flash(message, 'error') 
+            else:
+                flash(f"Stop ID '{stopID}' not found on Route '{route.routeName}'.", "error")
     
     return render_template('admin_update_stop_location_form.html', 
-                           title=f"Update Location for Stop: {stopToUpdate.stopName}", # camelCase attribute
-                           route=route, stop=stopToUpdate, current_location=currentLocation)
+                           title=f"Update Location for Stop: {stopToUpdate.stopName}",
+                           route=route, 
+                           stop=stopToUpdate, 
+                           current_location=currentLocation)
 
 @app.route('/admin/feedbacks', methods=['GET'])
 @adminRequired

@@ -5,7 +5,7 @@
         "feedbackContent": "The bus was 15 minutes late for trip TRP001. Very inconvenient.",
         "rating": 2,
         "relatedTripID": "TRP001",
-        "status": "Responded",
+        "status": "New",
         "submissionDatetime": "2025-07-20T10:30:00+00:00",
         "responseIDs": [
             "ddd4f18f-a86f-43a3-8372-845ac07217e2"
@@ -17,7 +17,7 @@
         "feedbackContent": "The online booking system is very easy to use! Great job!",
         "rating": 5,
         "relatedTripID": null,
-        "status": "Responded",
+        "status": "Pending",
         "submissionDatetime": "2025-07-21T14:00:00+00:00",
         "responseIDs": [
             "5f34e8a8-0ea0-405d-bd49-b882555f31a2"
@@ -29,7 +29,7 @@
         "feedbackContent": "Could you please add a route to the new shopping mall?",
         "rating": null,
         "relatedTripID": null,
-        "status": "Responded",
+        "status": "Closed",
         "submissionDatetime": "2025-07-19T09:00:00+00:00",
         "responseIDs": [
             "resp-uuid-001",
