@@ -4,7 +4,7 @@
         "submitterUserID": "mock_user_001",
         "feedbackContent": "The bus was 15 minutes late for trip TRP001. Very inconvenient.",
         "rating": 2,
-        "relatedtripID": "TRP001",
+        "relatedTripID": "TRP001",
         "status": "Responded",
         "submissionDatetime": "2025-07-20T10:30:00+00:00",
         "responseIDs": [
@@ -16,7 +16,7 @@
         "submitterUserID": "another_userID_example",
         "feedbackContent": "The online booking system is very easy to use! Great job!",
         "rating": 5,
-        "relatedtripID": null,
+        "relatedTripID": null,
         "status": "Responded",
         "submissionDatetime": "2025-07-21T14:00:00+00:00",
         "responseIDs": [
@@ -28,11 +28,12 @@
         "submitterUserID": "mock_user_001",
         "feedbackContent": "Could you please add a route to the new shopping mall?",
         "rating": null,
-        "relatedtripID": null,
+        "relatedTripID": null,
         "status": "Responded",
         "submissionDatetime": "2025-07-19T09:00:00+00:00",
         "responseIDs": [
-            "resp-uuid-001"
+            "resp-uuid-001",
+            "ce89ada9-7803-4586-88f7-b3fff9682f5a"
         ]
     }
 ]

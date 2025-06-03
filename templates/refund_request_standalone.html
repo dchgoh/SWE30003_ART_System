@@ -1,10 +1,10 @@
+{# templates/refund_request_standalone.html #}
 {% extends "layout.html" %}
 
 {% block content %}
     <h2>Standalone Refund Demonstration</h2>
     <p>This page lists sample orders for user: <strong>{{ mockUserID }}</strong>. You can attempt to refund "Completed" orders.</p>
-    <p><em>Ensure you have sample "Completed" orders, with associated tickets and payments, for this user in your JSON data files.</em></p>
-
+    <p><em>Ensure you have sample "Completed" orders, with associated line items, tickets, and payments, for this user in your JSON data files.</em></p>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -16,63 +16,37 @@
 
     <h3>Sample Orders:</h3>
     {% if orders_to_display %}
-        {% for item in orders_to_display %}
-            <div class="order-item" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px; background-color: #f9f9f9;">
-                <h4>Order ID: {{ item.order.orderID }}</h4>
+        {% for item_data in orders_to_display %}
+            <div class="order-item">
+                <h4>Order ID: {{ item_data.order.orderID }}</h4>
                 <p>
-                    {% if item.trip %}
-                        Trip: {{ item.trip.origin }} to {{ item.trip.destination }} ({{ item.trip.departureTime }}) <br>
-                    {% else %}
-                        Trip data missing for this order. <br>
-                    {% endif %}
-                    Tickets: {{ item.order.numTickets }} | Total Paid: RM {{ "%.2f"|format(item.order.totalAmount) }} <br>
-                    {# CORRECTED SPAN BELOW #}
+                    Trip Info: {{ item_data.trip_info }} <br> 
+                    Tickets: {{ item_data.num_tickets_in_order }} | 
+                    {# CORRECTED: Call the calculateTotalAmount() method #}
+                    Total Paid: RM {{ "%.2f"|format(item_data.order.calculateTotalAmount()) }} <br> 
+                    
                     <strong>Current Order Status: 
-                        <span class="
-                            {% if item.order.status == 'Completed' %}
-                                status-completed
-                            {% elif item.order.status == 'Refunded' or item.order.status == 'Cancelled' or item.order.status == 'PartiallyRefunded' %}
-                                status-refunded 
-                            {% else %}
-                                status-error
-                            {% endif %}
-                        ">
-                            {{ item.order.status }}
+                        <span class="status-{{ item_data.order.status|lower }}">
+                            {{ item_data.order.status }}
                         </span>
                     </strong>
                 </p>
                 
-                {% if item.order.status == "Completed" %}
+                {% if item_data.order.status == "Completed" %}
                     <form method="POST" action="{{ url_for('requestRefundStandaloneRoute') }}" style="display: inline;">
-                        <input type="hidden" name="orderID_to_refund" value="{{ item.order.orderID }}">
+                        <input type="hidden" name="order_id_to_refund" value="{{ item_data.order.orderID }}">
                         <button type="submit" class="btn btn-warning btn-small">Attempt Refund for this Order</button>
                     </form>
-                {% elif item.order.status in ["Refunded", "Cancelled", "PartiallyRefunded"] %}
-                    <p style="color: green;">This order has already been processed.</p> {# Kept inline style for simplicity here, but could also be a class #}
+                {% elif item_data.order.status in ["Refunded", "Cancelled", "PartiallyRefunded"] %}
+                    <p class="status-refunded">This order has already been processed.</p> 
                 {% else %}
-                     <p style="color: orange;">Not eligible for refund via this demo (Status: {{ item.order.status }}).</p> {# Kept inline style #}
+                     <p class="status-error">Not eligible for refund via this demo (Status: {{ item_data.order.status }}).</p> 
                 {% endif %}
             </div>
         {% endfor %}
     {% else %}
         <p>No sample orders found for user '{{ mockUserID }}'.</p>
-        <p>Please create sample data in <code>orders.json</code>, <code>tickets.json</code>, and <code>payments.json</code> for this user.</p>
-        <p>Example <code>orders.json</code> entry for user 'mock_user_001':</p>
-        <pre style="background-color:#eee; padding:5px; border:1px solid #ddd; font-size:0.9em;">
-[
-    {
-        "orderID": "sample-order-for-refund-001",
-        "userID": "mock_user_001",
-        "tripID": "TRP001", 
-        "numTickets": 1,
-        "totalAmount": 15.00,
-        "orderDatetime": "2025-07-01T10:00:00.000000",
-        "status": "Completed"
-    }
-]
-        </pre>
-        <p>Ensure corresponding ticket(s) in <code>tickets.json</code> (status: "Active", matching orderID, and a paymentID) and a payment in <code>payments.json</code> (status: "Completed", matching orderID).</p>
-
+        {# ... rest of the empty state message ... #}
     {% endif %}
 
     <p style="margin-top: 20px;"><a href="{{ url_for('home') }}">Back to Homepage</a></p>

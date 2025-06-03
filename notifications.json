@@ -25,5 +25,14 @@
         "notificationType": "FeedbackResponse",
         "sentDatetime": "2025-05-24T22:36:40.805709",
         "readStatus": false
+    },
+    {
+        "notificationID": "d6f51653-3193-43cd-9a77-74a885842099",
+        "recipientUserID": "mock_user_001",
+        "senderUserID": "admin_user_001",
+        "messageContent": "Admin responded to your feedback (ID: fb-uuid-003): 'ererer...'",
+        "notificationType": "FeedbackResponse",
+        "sentDatetime": "2025-06-03T13:15:21.912242",
+        "readStatus": false
     }
 ]

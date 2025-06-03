@@ -1,0 +1,18 @@
+[
+    {
+        "lineItemID": "5d0d61ef-029e-418b-8563-6c329f08e87e",
+        "orderID": "2a679adb-5b06-4b45-b1f5-9622e5c1bb5a",
+        "itemID": "TRP001",
+        "itemType": "TripTicket",
+        "quantity": 1,
+        "unitPrice": 15.0
+    },
+    {
+        "lineItemID": "ebb1a1a4-80d7-4ea4-bdb2-c68f7ea2bc27",
+        "orderID": "53ab6e8b-5cd6-4e5e-9922-561e3989a1a3",
+        "itemID": "TRP001",
+        "itemType": "TripTicket",
+        "quantity": 1,
+        "unitPrice": 15.0
+    }
+]
