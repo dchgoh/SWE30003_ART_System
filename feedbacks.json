@@ -5,10 +5,11 @@
         "feedbackContent": "The bus was 15 minutes late for trip TRP001. Very inconvenient.",
         "rating": 2,
         "relatedTripID": "TRP001",
-        "status": "New",
+        "status": "Responded",
         "submissionDatetime": "2025-07-20T10:30:00+00:00",
         "responseIDs": [
-            "ddd4f18f-a86f-43a3-8372-845ac07217e2"
+            "ddd4f18f-a86f-43a3-8372-845ac07217e2",
+            "2c700ccd-b232-49ed-a6ca-ee8c1e855d18"
         ]
     },
     {

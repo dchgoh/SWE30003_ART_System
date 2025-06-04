@@ -3,9 +3,9 @@
         "tripID": "TRP001",
         "origin": "Kuching Sentral",
         "destination": "Serian",
-        "departureTime": "2025-07-15 09:00",
+        "departureTime": "2025-07-15T09:00:00+00:00",
         "price": 15.0,
-        "availableSeats": 44
+        "availableSeats": 43
     },
     {
         "tripID": "TRP002",

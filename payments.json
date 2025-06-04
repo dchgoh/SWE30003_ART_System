@@ -102,5 +102,21 @@
         "method": "MockCard",
         "status": "Completed",
         "paymentDatetime": "2025-06-03T13:05:07.612464"
+    },
+    {
+        "paymentID": "31a3baf9-6918-46a7-b2de-00b7e6024e34",
+        "orderID": "beb94bf4-3928-47ab-bbd9-d9c35687faa2",
+        "amount": 15.0,
+        "method": "MockCard",
+        "status": "Refunded",
+        "paymentDatetime": "2025-06-04T14:59:31.928560+00:00"
+    },
+    {
+        "paymentID": "fac35554-081d-4334-a1e1-5453b632f5dc",
+        "orderID": "12ddf649-7f96-4c20-9e75-cb9d68a128fb",
+        "amount": 15.0,
+        "method": "MockCard",
+        "status": "Completed",
+        "paymentDatetime": "2025-06-04T09:43:48.524996+00:00"
     }
 ]

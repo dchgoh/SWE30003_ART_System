@@ -1,77 +1,38 @@
 [
     {
-        "orderID": "a82831cb-b5ca-4666-968e-d26c2829c87b",
-        "userID": "mock_user_001",
-        "tripID": "TRP001",
-        "numTickets": 1,
-        "totalAmount": 15.0,
-        "orderDatetime": "2025-05-20T15:39:10.737584",
-        "status": "Refunded"
-    },
-    {
-        "orderID": "7e1bc846-846f-43f0-987b-3549ea5b6f55",
-        "userID": "mock_user_001",
-        "tripID": "TRP001",
-        "numTickets": 1,
-        "totalAmount": 15.0,
-        "orderDatetime": "2025-05-23T10:43:11.984855",
-        "status": "Refunded"
-    },
-    {
-        "orderID": "a0b57ffc-1104-44c3-950d-a35c59876399",
-        "userID": "mock_user_001",
-        "tripID": "TRP001",
-        "numTickets": 1,
-        "totalAmount": 15.0,
-        "orderDatetime": "2025-06-02T01:29:21.667537",
-        "status": "Refunded"
-    },
-    {
-        "orderID": "a218931e-a3c3-4c85-a01a-aeca2d8d67b4",
-        "userID": "mock_user_001",
-        "tripID": "TRP001",
-        "numTickets": 1,
-        "totalAmount": 15.0,
-        "orderDatetime": "2025-06-02T22:32:58.109213",
-        "status": "Refunded"
-    },
-    {
-        "orderID": "fa910e87-a9b6-4306-9db9-3fbb1abf99b6",
-        "userID": "mock_user_001",
-        "tripID": "TRP001",
-        "numTickets": 1,
-        "totalAmount": 15.0,
-        "orderDatetime": "2025-06-02T22:33:56.505876",
-        "status": "Refunded"
-    },
-    {
-        "orderID": "6dd928f1-ddaf-45cd-9932-598620296779",
-        "userID": "mock_user_001",
-        "tripID": "TRP001",
-        "numTickets": 1,
-        "totalAmount": 15.0,
-        "orderDatetime": "2025-06-02T22:57:23.237669",
-        "status": "Refunded"
-    },
-    {
-        "orderID": "1e6d8f7f-0645-40e4-b189-a9443af5c2d2",
-        "userID": "mock_user_001",
-        "tripID": "TRP001",
-        "numTickets": 1,
-        "totalAmount": 15.0,
-        "orderDatetime": "2025-06-03T02:30:51.318255",
-        "status": "Refunded"
-    },
-    {
-        "orderID": "2a679adb-5b06-4b45-b1f5-9622e5c1bb5a",
-        "userID": "mock_user_001",
-        "orderDatetime": "2025-06-03T10:25:54.601342",
-        "status": "Refunded"
-    },
-    {
         "orderID": "53ab6e8b-5cd6-4e5e-9922-561e3989a1a3",
         "userID": "mock_user_001",
         "orderDatetime": "2025-06-03T13:05:07.580580",
+        "status": "Completed"
+    },
+    {
+        "orderID": "beb94bf4-3928-47ab-bbd9-d9c35687faa2",
+        "userID": "mock_user_001",
+        "orderDatetime": "2025-06-04T14:59:31.862183+00:00",
+        "status": "Refunded"
+    },
+    {
+        "orderID": "16870f1d-78f4-46d7-a81f-d6f72421bab3",
+        "userID": "mock_user_001",
+        "orderDatetime": "2025-06-04T09:42:14.918984+00:00",
+        "status": "PendingPayment"
+    },
+    {
+        "orderID": "24157a4c-b438-4204-8ead-7000460a33a9",
+        "userID": "mock_user_001",
+        "orderDatetime": "2025-06-04T09:42:40.319202+00:00",
+        "status": "PendingPayment"
+    },
+    {
+        "orderID": "63fdc0f6-b81f-4c43-a366-f3f2fc32b6d0",
+        "userID": "mock_user_001",
+        "orderDatetime": "2025-06-04T09:43:30.510728+00:00",
+        "status": "PendingPayment"
+    },
+    {
+        "orderID": "12ddf649-7f96-4c20-9e75-cb9d68a128fb",
+        "userID": "mock_user_001",
+        "orderDatetime": "2025-06-04T09:43:48.499907+00:00",
         "status": "Completed"
     }
 ]

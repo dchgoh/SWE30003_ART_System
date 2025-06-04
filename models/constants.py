@@ -1,0 +1,15 @@
+# models/constants.py
+
+USER_DATA_FILE = 'users.json'
+TRIP_DATA_FILE = 'trips.json'
+TICKET_DATA_FILE = 'tickets.json'
+ORDER_DATA_FILE = 'orders.json'
+PAYMENT_DATA_FILE = 'payments.json'
+REFUND_DATA_FILE = 'refunds.json'
+LOCATION_DATA_FILE = 'locations.json'
+STOP_DATA_FILE = 'stops.json'
+ROUTE_DATA_FILE = 'routes.json'
+FEEDBACK_DATA_FILE = 'feedbacks.json'
+RESPONSE_DATA_FILE = 'responses.json'
+NOTIFICATION_DATA_FILE = 'notifications.json'
+ORDER_LINE_ITEM_DATA_FILE = 'order_line_items.json'
